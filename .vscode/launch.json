@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Deque",
+            "request": "launch",
+            "mainClass": "Deque"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - LinkedListStack",
+            "request": "launch",
+            "mainClass": "LinkedListStack"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ArrayStack",
+            "request": "launch",
+            "mainClass": "ArrayStack"
+        }
+    ]
+}
