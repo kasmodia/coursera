@@ -1,3 +1,4 @@
+temp/
 *.class
 .classpath
 percolation.zip
