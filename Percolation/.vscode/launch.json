@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - PercolationStats",
+            "request": "launch",
+            "mainClass": "PercolationStats",
+            "projectName": "Percolation_cbe6f1b3"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Scratch",
+            "request": "launch",
+            "mainClass": "Scratch",
+            "projectName": "Percolation_cbe6f1b3"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Percolation",
+            "request": "launch",
+            "mainClass": "Percolation",
+            "projectName": "Percolation_cbe6f1b3"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Test",
+            "request": "launch",
+            "mainClass": "Test",
+            "projectName": "Percolation_cbe6f1b3"
+        }
+    ]
+}
