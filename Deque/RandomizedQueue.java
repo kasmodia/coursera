@@ -1,3 +1,9 @@
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -9,12 +15,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] data;
     private Stack spots;
     private int size;
-    private int last;
+
+    // unit testing (required)
+    public static void main(final String[] args) {
+        testIterator();
+        testEnqueue();
+        testDequeue();
+    }
 
     // construct an empty randomized queue
     public RandomizedQueue() {
-        data = (Item[]) new Object[10];
-        spots = new Stack();
+        final int capacity = 5;
+        data = (Item[]) new Object[capacity];
+        spots = new Stack(capacity);
     }
 
     // is the randomized queue empty?
@@ -28,52 +41,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     // add the item
-    public void enqueue(Item item) {
+    public void enqueue(final Item item) {
+        if (item == null)
+            throw new IllegalArgumentException();
         expandIfNecessary();
-        if (!spots.isEmpty()) {
-            data[spots.pop()] = item;
-            size++;
-            return;
-        }
-        data[last++] = item;
+        data[spots.pop()] = item;
         size++;
     }
 
     // remove and return a random item
-    private void expandIfNecessary() {
-        if (spots.isEmpty()) {
-            if (last == data.length) {
-                Item[] newData = (Item[]) new Object[data.length * 2];
-                for (int i = 0; i < data.length; i++) {
-                    newData[i] = data[i];
-                }
-                data = newData;
-            }
-        }
-    }
-
     public Item dequeue() {
         if (isEmpty())
             throw new NoSuchElementException();
-
-        int next = StdRandom.uniform(data.length);
-        Item result = null;
-        while (next < data.length) {
-            result = data[next];
-            if (result != null) {
-                break;
-            }
-            next = StdRandom.uniform(data.length);
-        }      
-        data[next] = null;
-        spots.push(next);
         size--;
-        return result;
+        return data[spots.push()];
     }
 
     // return a random item (but do not remove it)
     public Item sample() {
-        return data[StdRandom.uniform(size)];
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return data[spots.peek()];
     }
 
     // return an independent iterator over items in random order
@@ -81,79 +69,134 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return new RandomIterator<Item>();
     }
 
-    private class RandomIterator<Item> implements Iterator<Item> {
-        Item[] iData = (Item[]) new Object[data.length];
-        int iNext;
-        int found;
-        public RandomIterator() {
-            for (int i = 0; i < data.length; i++) {
-                iData[i] = (Item) data[i];
-            }
-        }
-        public boolean hasNext() {
-            return found < size;
-        }
-
-        public Item next() {
-            Item result = null;
-            while (iNext < size) {
-                if (iData[iNext] != null) {
-                    result = iData[iNext++];
-                    found++;
-                    break;
-                }
-                iNext++;
-            }
-            return result;
-        }
+    private void expandSpots() {
+        spots = new Stack(data.length);
     }
 
-    // unit testing (required)
-    public static void main(String[] args) {
-        RandomizedQueue<String> queue = new RandomizedQueue<>();
-        queue.enqueue("Ahmed");
-        queue.enqueue("Rezk");
-        queue.enqueue("Attia");
-        queue.dequeue();
-        queue.enqueue("Badr");
-
-        Iterator<String> it = queue.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
+    private void expandIfNecessary() {
+        if (size == data.length) {
+            final Item[] newData = (Item[]) new Object[data.length * 2];
+            for (int i = 0; i < data.length; i++) {
+                newData[i] = data[i];
+            }
+            data = newData;
+            expandSpots();
         }
     }
 
     private class Stack {
-        int[] data;
-        int last;
+        int[] sData;
+        int top;
 
-        public Stack() {
-            data = new int[10];
+        Stack(final int size) {
+            sData = new int[size];
+            for (int i = 0; i < size; i++) {
+                sData[i] = i;
+            }
+            top = size;
+            StdRandom.shuffle(sData);
         }
 
-        void push(int item) {
-            expandIfNecessary();
-            data[last++] = item;
+        int peek() {
+            return sData[StdRandom.uniform(top)];
+        }
+
+        int push() {
+            final int randomNext = StdRandom.uniform(top, sData.length);
+            swap(top, randomNext);
+            return sData[top++];
+        }
+
+        void swap(final int a, final int b) {
+            final int temp = sData[a];
+            sData[a] = sData[b];
+            sData[b] = temp;
         }
 
         int pop() {
             if (isEmpty())
                 throw new EmptyStackException();
-            return data[--last];
+            return sData[--top];
         }
 
         boolean isEmpty() {
-            return last == 0;
+            return top == 0;
         }
 
-        private void expandIfNecessary() {
-            if (last == size) {
-                int[] newArr = new int[data.length * 2];
-                for (int i = 0; i < data.length; i++) {
-                    newArr[i] = data[i];
-                }
-                data = newArr;
-            }   
+        int size() {
+            return sData.length;
         }
+    }
+
+    private class RandomIterator<Item> implements Iterator<Item> {
+        int[] indices;
+        int index;
+
+        public RandomIterator() {
+            final int usedSpots = (spots.size()) - spots.top;
+            indices = new int[usedSpots];
+            for (int i = 0; i < usedSpots; i++) {
+                indices[i] = spots.sData[spots.top + i];
+            }
+            StdRandom.shuffle(indices);
+        }
+
+        public boolean hasNext() {
+            return index < indices.length;
+        }
+
+        public Item next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
+            return (Item) data[indices[index++]];
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private static void testDequeue() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        queue.enqueue("Ahmed");
+        queue.dequeue();
+        assertEquals(0, queue.size());
+    }
+
+    private static void testEnqueue() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        assertEquals(0, queue.size());
+        queue.enqueue("Ahmed");
+        assertEquals(1, queue.size());
+    }
+
+    private static void testIterator() {
+        RandomizedQueue<String> queue = new RandomizedQueue<>();
+        queue.enqueue("Ahmed");
+        Iterator<String> it = queue.iterator();
+        assertEquals("Ahmed", it.next());
+        assertEquals(1, queue.size());
+
+        queue.enqueue("Rezk");
+        it = queue.iterator();
+        assertTrue(it.hasNext());
+        assertTrue(Arrays.asList("Ahmed", "Rezk").contains(it.next()));
+        assertTrue(Arrays.asList("Ahmed", "Rezk").contains(it.next()));
+        assertEquals(queue.size(), 2);
+        assertFalse(it.hasNext());
+
+        queue = new RandomizedQueue<>();
+        queue.enqueue("Ahmed");
+        queue.enqueue("Rezk");
+        queue.enqueue("Attia");
+        queue.enqueue("Mohamed");
+        queue.enqueue("Zaki");
+        queue.enqueue("Edra");
+        queue.enqueue("Shanabo");
+        queue.enqueue("Baher");
+        queue.enqueue("Shalabi");
+        final Iterator<String> it1 = queue.iterator();
+        final Iterator<String> it2 = queue.iterator();
+        assertNotEquals(it1.next(), it2.next());
     }
 }
