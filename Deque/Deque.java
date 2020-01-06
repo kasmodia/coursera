@@ -23,8 +23,8 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // add the item to the front
-    public void addFirst(Item item) {
-        Node<Item> newNode = new Node<>(item);
+    public void addFirst(final Item item) {
+        final Node<Item> newNode = new Node<>(item);
         if (isEmpty()) {
             first = newNode;
             last = newNode;
@@ -38,8 +38,8 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // add the item to the back
-    public void addLast(Item item) {
-        Node<Item> newNode = new Node<>(item);
+    public void addLast(final Item item) {
+        final Node<Item> newNode = new Node<>(item);
         if (isEmpty()) {
             first = newNode;
             last = newNode;
@@ -57,7 +57,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException();
         size--;
-        Node<Item> result = first;
+        final Node<Item> result = first;
         first = first.next;
         return result.item;
     }
@@ -67,7 +67,7 @@ public class Deque<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException();
         size--;
-        Node<Item> result = last;
+        final Node<Item> result = last;
         last = last.prev;
         return result.item;
     }
@@ -76,11 +76,12 @@ public class Deque<Item> implements Iterable<Item> {
     public Iterator<Item> iterator() {
         return new Iterator<Item>() {
             Node<Item> next = first;
+
             @Override
             public Item next() {
                 if (!hasNext())
                     return null;
-                Item result = next.item;
+                final Item result = next.item;
                 next = next.next;
                 return result;
             }
@@ -97,41 +98,152 @@ public class Deque<Item> implements Iterable<Item> {
         Node<Item> prev;
         Item item;
 
-        public Node(Item item) {
+        public Node(final Item item) {
             this.item = item;
         }
     }
 
     // unit testing (required)
-    public static void main(String[] args) {
-        Deque<String> d = new Deque<>();
-        if (!d.isEmpty())
-            d.addFirst("Will not be added");
-    
-        if (d.size() > 0)
-            d.removeFirst();
-
-        d.addFirst("Third Item");
-        d.addFirst("Second Item");
-        d.addFirst("First Item");
-
-        d.removeFirst();
-
-        d.addFirst("First Item");
-
-        d.removeLast();
-        
-        d.addLast("Third Item");
-        d.addLast("Fourth Item");
-        d.addLast("Fifth Item");
-
-        d.removeLast();
-
-        d.addLast("Fifth Item");
-        d.addLast("Sixth Item");
-        Iterator<String> it = d.iterator();
-        while (it.hasNext()) 
-            System.out.println(it.next());
+    public static void main(final String[] args) {
+        testSize();
+        testIsEmpty();
+        testIterator();
+        testAddFirst();
+        testAddLast();
+        testRemoveFirst();
+        testRemoveLast();
+        testAddFirstAndRemoveLast();
     }
 
+    private static void testRemoveLast() {
+        final Deque<Integer> d = new Deque<>();
+        
+        Integer item = d.removeLast();
+        if (item != null)
+            throw new TestFailedException("EmptyStackException must be thrown");
+        
+        d.addFirst(1);
+        d.removeLast();
+        if (!d.isEmpty())
+            throw new TestFailedException("Queue must be empty");
+    }
+
+    private static void testRemoveFirst() {
+        final Deque<Integer> d = new Deque<>();
+        Integer item = d.removeFirst();
+        if (item != null)
+            throw new TestFailedException("EmptyStackException must be thrown");
+            
+        d.addFirst(1);
+        d.removeFirst();
+        if (!d.isEmpty())
+            throw new TestFailedException("Queue must be empty");
+    }
+
+    private static void testAddLast() {
+        final Deque<Integer> d = new Deque<>();
+        d.addLast(1);
+        if (d.isEmpty())
+            throw new TestFailedException("Queue must not be empty");
+    }
+
+    private static void testAddFirst() {
+        final Deque<Integer> d = new Deque<>();
+        d.addFirst(1);
+        if (d.isEmpty())
+            throw new TestFailedException("Queue must not be empty");
+    }
+
+    private static void testIterator() {
+        final Deque<Integer> dequeue = new Deque<>();
+        dequeue.addFirst(1);
+        final Iterator<Integer> it = dequeue.iterator();
+        if (!it.hasNext())
+            throw new TestFailedException("Iterator must have next");
+
+        dequeue.addLast(2);
+        for (int i = 0; i < 2; i++) {
+            if (!it.hasNext())
+                throw new TestFailedException("Iterator must have next");
+            it.next();
+        }
+
+        dequeue.removeFirst();
+        dequeue.removeLast();
+
+        if (it.hasNext())
+            throw new TestFailedException("Iterator must not have next");
+
+        dequeue.addLast(1);
+        dequeue.addLast(2);
+        dequeue.addLast(3);
+        dequeue.addLast(4);
+        dequeue.addLast(5);
+
+        final Iterator<Integer> iterator1 = dequeue.iterator();
+        for (int i = 0; i < dequeue.size(); i++) {
+            final int item1 = iterator1.next();
+            final Iterator<Integer> iterator2 = dequeue.iterator();
+            for (int j = 0; j < dequeue.size(); j++) {
+                if (item1 - i + j != iterator2.next())
+                    throw new TestFailedException("Iterators should be independent");
+            }
+        }
+    }
+
+    private static void testIsEmpty() {
+        final Deque<Integer> d = new Deque<>();
+        if (!d.isEmpty())
+            throw new TestFailedException("Queue must be empty");
+
+        d.addFirst(1);
+        if (d.isEmpty())
+            throw new TestFailedException("Queue must not be empty");
+
+        d.removeFirst();
+        if (!d.isEmpty())
+            throw new TestFailedException("Queue must be empty");
+
+        d.addLast(1);
+        if (d.isEmpty())
+            throw new TestFailedException("Queue must not be empty");
+
+        d.removeLast();
+        if (!d.isEmpty())
+            throw new TestFailedException("Queue must be empty");
+    }
+
+    private static void testSize() {
+        final Deque<Integer> d = new Deque<>();
+        if (d.size() != 0)
+            throw new TestFailedException("Size must me 0");
+
+        d.addFirst(1);
+        if (d.size() != 1)
+            throw new TestFailedException("Size must me 1");
+
+        d.addLast(2);
+        if (d.size() != 2)
+            throw new TestFailedException("Size must me 2");
+
+        d.removeFirst();
+        if (d.size() != 1)
+            throw new TestFailedException("Size must me 1");
+
+        d.removeLast();
+        if (d.size() != 0)
+            throw new TestFailedException("Size must me 0");
+    }
+
+    private static void testAddFirstAndRemoveLast() {
+        final Deque<Integer> d = new Deque<>();
+        for (int i = 0; i < 10; i++) {
+            d.addFirst(i);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            if (d.removeLast() != i)
+                throw new TestFailedException("removeLast() must return " + i);
+        }
+    }
 }

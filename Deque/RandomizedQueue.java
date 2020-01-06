@@ -1,33 +1,72 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] data;
-    private Stack spots;
+    private final UsageStack spots;
     private int size;
 
     // unit testing (required)
     public static void main(final String[] args) {
         testIterator();
+        testSimultaneousIterators();
         testEnqueue();
         testDequeue();
+        testSize();
+        testIsEmpty();
+        testSample();
     }
-
+    
     // construct an empty randomized queue
     public RandomizedQueue() {
         final int capacity = 5;
         data = (Item[]) new Object[capacity];
-        spots = new Stack(capacity);
+        spots = new UsageStack(capacity);
+    }
+
+    private static void testSimultaneousIterators() {
+        final int n = 5;
+        final RandomizedQueue<Integer> queue = new RandomizedQueue<Integer>();
+        for (int i = 0; i < n; i++)
+            queue.enqueue(i);
+        for (final int a : queue) {
+            for (final int b : queue)
+                StdOut.print(a + "-" + b + " ");
+            StdOut.println();
+        }
+    }
+
+    private static void testSize() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        if (queue.size() != 0) throw new TestFailedException("Size must be 0");
+
+        queue.enqueue("item");
+        if (queue.size() != 1) throw new TestFailedException("Size must be 1");
+
+        queue.dequeue();
+        if (queue.size() != 0) throw new TestFailedException("Size must be 0");
+    }
+
+    private static void testSample() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        queue.enqueue("item");
+        if (!queue.sample().equals("item")) throw new TestFailedException("Returned value must be 'item'");
+    }
+
+    private static void testIsEmpty() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        if (!queue.isEmpty()) throw new TestFailedException("Queue must be empty");
+
+        queue.enqueue("item");
+        if (queue.isEmpty()) throw new TestFailedException("Queue must not be empty");
+
+        queue.dequeue();
+        if (!queue.isEmpty()) throw new TestFailedException("Queue must be empty");
     }
 
     // is the randomized queue empty?
@@ -54,7 +93,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty())
             throw new NoSuchElementException();
         size--;
-        return data[spots.push()];
+        final int freeSpot = spots.push();
+        final Item item = data[freeSpot];
+        data[freeSpot] = null;
+        return item;
     }
 
     // return a random item (but do not remove it)
@@ -69,10 +111,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return new RandomIterator<Item>();
     }
 
-    private void expandSpots() {
-        spots = new Stack(data.length);
-    }
-
     private void expandIfNecessary() {
         if (size == data.length) {
             final Item[] newData = (Item[]) new Object[data.length * 2];
@@ -80,43 +118,106 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 newData[i] = data[i];
             }
             data = newData;
-            expandSpots();
+            spots.expandSpots();
         }
     }
 
-    private class Stack {
-        int[] sData;
+    private static void testDequeue() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        queue.enqueue("Ahmed");
+        final String item = queue.dequeue();
+        if (!queue.isEmpty()) throw new TestFailedException("Queue must be empty");
+        if (!item.equals("Ahmed")) throw new TestFailedException("Returned value must be 'Ahmed'");
+    }
+
+    private static void testEnqueue() {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        if (!queue.isEmpty()) throw new TestFailedException("Queue must be empty");
+        queue.enqueue("Ahmed");
+        if (queue.size() != 1) throw new TestFailedException("Queue must have size 1");
+    }
+
+    private static void testIterator() {
+        RandomizedQueue<String> queue = new RandomizedQueue<>();
+        queue.enqueue("Ahmed");
+        Iterator<String> it = queue.iterator();
+        if (!it.next().equals("Ahmed")) throw new TestFailedException("Value must be 'Ahmed'");
+        if (queue.size() != 1) throw new TestFailedException("Queue must have size 1");
+
+        queue.enqueue("Rezk");
+        it = queue.iterator();
+        if (!it.hasNext()) throw new TestFailedException("Queue must have next");        
+        if (queue.size() != 2) throw new TestFailedException("Queue must have size 2");
+        it.next();
+        it.next();
+        if (it.hasNext()) throw new TestFailedException("Queue must not have next");
+
+        queue = new RandomizedQueue<>();
+        queue.enqueue("Shanabo");
+        queue.enqueue("Baher");
+        queue.enqueue("Shalabi");
+        queue.enqueue("Jackson");
+        queue.enqueue("Ali");
+        queue.enqueue("Shanabo");
+        queue.enqueue("Taleb");
+        queue.enqueue("Basha");
+        queue.enqueue("Shleta");
+        queue.enqueue("Kal");
+        final Iterator<String> it1 = queue.iterator();
+        final Iterator<String> it2 = queue.iterator();
+        boolean notEquals = false;
+        for (int i = 0; i < 10; i++) {
+            if (!it1.next().equals(it2.next())) notEquals = true;
+        }
+        if (!notEquals) throw new TestFailedException("Values must not be equal");
+    }
+
+    private class UsageStack {
+        int[] spotsData;
         int top;
 
-        Stack(final int size) {
-            sData = new int[size];
+        UsageStack(final int size) {
+            spotsData = new int[size];
             for (int i = 0; i < size; i++) {
-                sData[i] = i;
+                spotsData[i] = i;
             }
             top = size;
-            StdRandom.shuffle(sData);
+            StdRandom.shuffle(spotsData);
+        }
+
+        public void expandSpots() {
+            final int[] newSData = new int[size * 2];
+            for (int i = 0; i < size; i++) {
+                newSData[i] = i + size;
+            }
+            for (int i = size; i < size * 2; i++) {
+                newSData[i] = spotsData[i - size];
+            }
+            spotsData = newSData;
+            StdRandom.shuffle(spotsData, 0, size);
+            top = size;
         }
 
         int peek() {
-            return sData[StdRandom.uniform(top)];
+            return spotsData[StdRandom.uniform(top, size())];
         }
 
         int push() {
-            final int randomNext = StdRandom.uniform(top, sData.length);
+            final int randomNext = StdRandom.uniform(top, spotsData.length);
             swap(top, randomNext);
-            return sData[top++];
+            return spotsData[top++];
         }
 
         void swap(final int a, final int b) {
-            final int temp = sData[a];
-            sData[a] = sData[b];
-            sData[b] = temp;
+            final int temp = spotsData[a];
+            spotsData[a] = spotsData[b];
+            spotsData[b] = temp;
         }
 
         int pop() {
             if (isEmpty())
                 throw new EmptyStackException();
-            return sData[--top];
+            return spotsData[--top];
         }
 
         boolean isEmpty() {
@@ -124,19 +225,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         int size() {
-            return sData.length;
+            return spotsData.length;
         }
     }
 
     private class RandomIterator<Item> implements Iterator<Item> {
         int[] indices;
         int index;
-
-        public RandomIterator() {
+        
+        RandomIterator() {
             final int usedSpots = (spots.size()) - spots.top;
             indices = new int[usedSpots];
             for (int i = 0; i < usedSpots; i++) {
-                indices[i] = spots.sData[spots.top + i];
+                indices[i] = spots.spotsData[spots.top + i];
             }
             StdRandom.shuffle(indices);
         }
@@ -154,49 +255,5 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         public void remove() {
             throw new UnsupportedOperationException();
         }
-    }
-
-    private static void testDequeue() {
-        final RandomizedQueue<String> queue = new RandomizedQueue<>();
-        queue.enqueue("Ahmed");
-        queue.dequeue();
-        assertEquals(0, queue.size());
-    }
-
-    private static void testEnqueue() {
-        final RandomizedQueue<String> queue = new RandomizedQueue<>();
-        assertEquals(0, queue.size());
-        queue.enqueue("Ahmed");
-        assertEquals(1, queue.size());
-    }
-
-    private static void testIterator() {
-        RandomizedQueue<String> queue = new RandomizedQueue<>();
-        queue.enqueue("Ahmed");
-        Iterator<String> it = queue.iterator();
-        assertEquals("Ahmed", it.next());
-        assertEquals(1, queue.size());
-
-        queue.enqueue("Rezk");
-        it = queue.iterator();
-        assertTrue(it.hasNext());
-        assertTrue(Arrays.asList("Ahmed", "Rezk").contains(it.next()));
-        assertTrue(Arrays.asList("Ahmed", "Rezk").contains(it.next()));
-        assertEquals(queue.size(), 2);
-        assertFalse(it.hasNext());
-
-        queue = new RandomizedQueue<>();
-        queue.enqueue("Ahmed");
-        queue.enqueue("Rezk");
-        queue.enqueue("Attia");
-        queue.enqueue("Mohamed");
-        queue.enqueue("Zaki");
-        queue.enqueue("Edra");
-        queue.enqueue("Shanabo");
-        queue.enqueue("Baher");
-        queue.enqueue("Shalabi");
-        final Iterator<String> it1 = queue.iterator();
-        final Iterator<String> it2 = queue.iterator();
-        assertNotEquals(it1.next(), it2.next());
     }
 }
