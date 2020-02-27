@@ -23,46 +23,38 @@ public class Solver {
     public Solver(Board initial) {
         if (initial == null) throw new IllegalArgumentException("Null argument");
         initGoal(initial);
-        Node<Board> currentNode = new Node<>(initial);
-        Node<Board> tCurrentNode = new Node<>(initial.twin());
+        Board currentBoard = initial;
+        Board tCurrentBoard = initial.twin();
+        // Node<Board> currentNode = new Node<>(initial);
+        // Node<Board> tCurrentNode = new Node<>(initial.twin());
         Comparator<Board> comparator = (Board o1, Board o2) ->
                 Integer.compare(o1.manhattan() + o1.getMoves(), o2.manhattan() + o2.getMoves());
         MinPQ<Board> minPQ = new MinPQ<>(comparator);
         MinPQ<Board> tMinPQ = new MinPQ<>(comparator);
-        minPQ.insert(initial);
-        tMinPQ.insert(initial.twin());
-        while (!currentNode.board.equals(goal) && !tCurrentNode.board.equals(goal)) {
+        while (!currentBoard.equals(goal) && !tCurrentBoard.equals(goal)) {
             moves++;
-            currentNode = step(currentNode, minPQ);
-            tCurrentNode = step(tCurrentNode, tMinPQ);
+            currentBoard = step(currentBoard, minPQ);
+            tCurrentBoard = step(tCurrentBoard, tMinPQ);
         }
-        solvable = currentNode.board.equals(goal);
+        solvable = currentBoard.equals(goal);
         if (solvable) {
-            // already solved
-            if (currentNode.parent == null) {
-                solution.push(currentNode.board);
-                return;
-            }
-            while (currentNode != null) {
-                solution.push(currentNode.board);
-                currentNode = currentNode.parent;
+            while (currentBoard != null) {
+                solution.push(currentBoard);
+                currentBoard = currentBoard.getParent();
             }
         }
     }
 
-    private Node<Board> step(Node<Board> currentNode, MinPQ<Board> pq) {
-        for (Board neighbor : currentNode.board.neighbors()) {
-            if (!neighbor.equals(currentNode.parent)) {
+    private Board step(Board currentNode, MinPQ<Board> pq) {
+        for (Board neighbor : currentNode.neighbors()) {
+            if (!neighbor.equals(currentNode.getParent())) {
                 neighbor.setMoves(moves);
+                neighbor.setParent(currentNode);
                 pq.insert(neighbor);
-                Node<Board> newNode = new Node<>(neighbor);
-                newNode.parent = currentNode;
             }
         }
 
-        final Node<Board> newMin = new Node<>(pq.delMin());
-        newMin.parent = currentNode;
-        return newMin;
+        return pq.delMin();
     }
 
     private void initGoal(Board initial) {
