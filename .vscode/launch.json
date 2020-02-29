@@ -2,6 +2,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - FastCollinearPoints",
+            "request": "launch",
+            "mainClass": "FastCollinearPoints",
+            "projectName": "coursera_754337d0"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Point",
+            "request": "launch",
+            "mainClass": "Point",
+            "projectName": "coursera_754337d0"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - BruteCollinearPoints",
+            "request": "launch",
+            "mainClass": "BruteCollinearPoints",
+            "projectName": "coursera_754337d0"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Permutation",
             "request": "launch",
             "mainClass": "Permutation",
