@@ -48,7 +48,11 @@ public class PuzzleChecker {
                     .filter(Files::isRegularFile)
                     .map(Path::getFileName)
                     .map(path -> path.toFile().getName())
-                    .filter(name -> name.endsWith("txt"))
+                    // .filter(name -> name.endsWith("txt"))
+                    // .filter(name -> !name.contains("14"))
+                    // .filter(name -> !name.contains("15"))
+                    // .filter(name -> !name.contains("16"))
+                    .filter(name -> name.equals("puzzle04.txt"))
                     .sorted()
                     .collect(Collectors.toList());
         }
