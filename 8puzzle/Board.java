@@ -7,7 +7,6 @@ public class Board implements Comparable<Board> {
     private int[][] tiles;
     private int n;
     private int moves;
-    private Board parent;
     private int hamming = -1;
     private int manhattan = -1;
 
@@ -53,11 +52,12 @@ public class Board implements Comparable<Board> {
     public int hamming() {
         if (hamming != -1)
             return hamming;
+        hamming = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                final int expectedValue = expectedValue(i, j);
-                if (expectedValue == n * n) continue;
-                if (tiles[i][j] != expectedValue)
+                final int goalValue = goalValue(i, j);
+                if (goalValue == n * n) continue;
+                if (tiles[i][j] != goalValue)
                     hamming++;
             }
         }
@@ -68,11 +68,12 @@ public class Board implements Comparable<Board> {
     public int manhattan() {
         if (manhattan != -1)
             return manhattan;
+        manhattan = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                int expectedValue = expectedValue(i, j);
-                if (expectedValue == n * n) continue;
-                if (tiles[i][j] != expectedValue) {
+                int goalValue = goalValue(i, j);
+                if (goalValue == n * n) continue;
+                if (tiles[i][j] != goalValue) {
                     manhattan += searchForValue(i, j);
                 }
             }
@@ -80,11 +81,15 @@ public class Board implements Comparable<Board> {
         return manhattan;
     }
 
+    public int priority() {
+        return hamming() + getMoves();
+    }
+
     private int searchForValue(int i, int j) {
-        int expectedValue = expectedValue(i, j);
+        int goalValue = goalValue(i, j);
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < n; y++) {
-                if (tiles[x][y] == expectedValue)
+                if (tiles[x][y] == goalValue)
                     return Math.abs(x - i) + Math.abs(y - j);
             }
         }
@@ -92,14 +97,14 @@ public class Board implements Comparable<Board> {
         // not found, search backwards
         for (int x = 0; x >= 0; x--) {
             for (int y = 0; y >= 0; y--) {
-                if (tiles[x][y] == expectedValue)
+                if (tiles[x][y] == goalValue)
                     return Math.abs(x - i) + Math.abs(y - j);
             }
         }
         return 0;
     }
 
-    private int expectedValue(int i, int j) {
+    private int goalValue(int i, int j) {
         return (i * n) + j + 1;
     }
 
@@ -107,7 +112,7 @@ public class Board implements Comparable<Board> {
     public boolean isGoal() {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                final int expectedValue = expectedValue(i, j);
+                final int expectedValue = goalValue(i, j);
                 if (expectedValue == n * n) continue;
                 if (tiles[i][j] != expectedValue)
                     return false;
@@ -144,20 +149,14 @@ public class Board implements Comparable<Board> {
 
         List<Board> result = new ArrayList<>();
         final int[][] a1 = exchange(empty[0], empty[1], empty[0] - 1, empty[1]);
-        if (a1 != null) setParentAndAddNeighbor(result, a1);
+        if (a1 != null) result.add(new Board(a1));
         final int[][] a2 = exchange(empty[0], empty[1], empty[0] + 1, empty[1]);
-        if (a2 != null) setParentAndAddNeighbor(result, a2);
+        if (a2 != null) result.add(new Board(a2));
         final int[][] a3 = exchange(empty[0], empty[1], empty[0], empty[1] - 1);
-        if (a3 != null) setParentAndAddNeighbor(result, a3);
+        if (a3 != null) result.add(new Board(a3));
         final int[][] a4 = exchange(empty[0], empty[1], empty[0], empty[1] + 1);
-        if (a4 != null) setParentAndAddNeighbor(result, a4);
+        if (a4 != null) result.add(new Board(a4));
         return result;
-    }
-
-    private void setParentAndAddNeighbor(List<Board> result, int[][] ar) {
-        final Board child = new Board(ar);
-        child.setParent(this);
-        result.add(child);
     }
 
     private int[][] exchange(int x, int y, int i, int j) {
@@ -192,8 +191,8 @@ public class Board implements Comparable<Board> {
 
     // unit testing (not graded)
     public static void main(String[] args) {
-        testInput();
         testEquals();
+        testCompareTo();
         testHamming();
         testManhattan();
         testNeighbors();
@@ -212,21 +211,6 @@ public class Board implements Comparable<Board> {
         final Board board = new Board(new int[][] { { 1, 0, 9 }, { 4, 3, 2 }, { 7, 6, 5 } });
         System.out.println(board);
         System.out.println(board.twin());
-    }
-
-    private static void testInput() {
-        boolean expected = false;
-        try {
-            new Board(new int[][] {
-                    { 0, 1, 3, 9 }, { 4, 0, 2 }, { 7, 6, 5 }
-            });
-        }
-        catch (IllegalArgumentException ex) {
-            expected = true;
-        }
-
-        if (!expected)
-            throw new IllegalArgumentException("Input test failed");
     }
 
     private static void testNeighbors() {
@@ -262,6 +246,20 @@ public class Board implements Comparable<Board> {
             throw new IllegalArgumentException("Equal test failed");
     }
 
+    private static void testCompareTo() {
+        Board a = createRandomBoard();
+        Board b = createRandomBoard();
+        Board c = new Board(new int[][] {
+                { 0, 1, 3 }, { 2, 0, 4 }, { 5, 6, 7 }
+        });
+        if (a.compareTo(b) != 0)
+            throw new IllegalArgumentException("Equal test failed");
+        if (a.compareTo(c) != -1)
+            throw new IllegalArgumentException("Equal test failed");
+        if (a.compareTo(null) == 0)
+            throw new IllegalArgumentException("Equal test failed");
+    }
+
     private static Board createRandomBoard() {
         return new Board(new int[][] {
                 { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 }
@@ -288,14 +286,7 @@ public class Board implements Comparable<Board> {
     }
 
     public int compareTo(Board that) {
-        return Integer.compare(this.manhattan(), that.manhattan());
-    }
-
-    public Board getParent() {
-        return parent;
-    }
-
-    public void setParent(Board parent) {
-        this.parent = parent;
+        if (that == null) return 1;
+        return Integer.compare(this.hamming() + this.getMoves(), that.hamming() + that.getMoves());
     }
 }
