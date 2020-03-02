@@ -2,4 +2,4 @@ temp/
 *.class
 .classpath
 .vscode/
-percolation.zip
+*.zip

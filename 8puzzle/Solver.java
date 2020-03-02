@@ -9,25 +9,33 @@ import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Comparator;
+import java.util.Objects;
+
 public class Solver {
 
+    private static Comparator<Node> comparator = (Node o1, Node o2) -> {
+        if (o1 == null) return 1;
+        if (o2 == null) return -1;
+        return Integer.compare(o1.board.manhattan() + o1.moves, o2.board.manhattan() + o2.moves);
+    };
     private Board goal;
     private Stack<Board> solution = new Stack<>();
     private boolean solvable;
-    private int moves;
 
     // find a solution to the initial board (using the A* algorithm)
-    public Solver(Board initial) {
-        if (initial == null) throw new IllegalArgumentException("Null argument");
-        initGoal(initial);
-        MinPQ<Node<Board>> minPQ = new MinPQ<>();
-        minPQ.insert(new Node<>(initial));
-        MinPQ<Node<Board>> tMinPQ = new MinPQ<>();
-        tMinPQ.insert(new Node<>(initial.twin()));
+    public Solver(final Board initial) {
+        init(initial);
+        MinPQ<Node> minPQ = new MinPQ<>(comparator);
+        minPQ.insert(new Node(initial));
+        MinPQ<Node> tMinPQ = new MinPQ<>(comparator);
+        tMinPQ.insert(new Node(initial.twin()));
         solve(minPQ, tMinPQ);
     }
 
     public static void main(String[] args) {
+        testComparator();
+
         // create initial board from file
         In in = new In(args[0]);
         int n = in.readInt();
@@ -50,32 +58,55 @@ public class Solver {
         }
     }
 
+    public int hashCode() {
+        return Objects.hash(goal);
+    }
+
+    private void init(final Board initial) {
+        if (initial == null) throw new IllegalArgumentException("Null argument");
+        initGoal(initial);
+    }
+
+    private static void testComparator() {
+        Board a = new Board(new int[][] {
+                { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 }
+        });
+        Board b = new Board(new int[][] {
+                { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 }
+        });
+        Board c = new Board(new int[][] {
+                { 0, 1, 3 }, { 2, 0, 4 }, { 5, 6, 7 }
+        });
+
+        if (comparator.compare(new Node(a), new Node(b)) != 0)
+            throw new IllegalArgumentException("Equal test failed");
+        if (comparator.compare(new Node(a), new Node(c)) != -1)
+            throw new IllegalArgumentException("Equal test failed");
+        if (comparator.compare(new Node(a), null) == 0)
+            throw new IllegalArgumentException("Equal test failed");
+    }
+
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
         return solvable;
     }
+
     // min number of moves to solve initial board
-
     public int moves() {
-        return solution.size() - 1;
+        return solution.isEmpty() ? 0 : solution.size() - 1;
     }
+
     // sequence of boards in a shortest solution
-
     public Iterable<Board> solution() {
-        return solution;
+        return solution.isEmpty() ? null : solution;
     }
 
-    private void solve(MinPQ<Node<Board>> minPQ, MinPQ<Node<Board>> tMinPQ) {
-        Node<Board> min = minPQ.delMin();
-        Node<Board> tmin = tMinPQ.delMin();
-        int lastPriority = -1;
+    private void solve(final MinPQ<Node> minPQ, final MinPQ<Node> tMinPQ) {
+        Node min = minPQ.delMin();
+        Node tmin = tMinPQ.delMin();
         while (!min.board.equals(goal) && !tmin.board.equals(goal)) {
-            moves++;
-            min = addChildren(min, minPQ);
-            if (lastPriority > min.board.priority())
-                throw new IllegalArgumentException("something is wrong here");
-            lastPriority = min.board.priority();
-            tmin = addChildren(tmin, tMinPQ);
+            min = addNeighbors(min, minPQ);
+            tmin = addNeighbors(tmin, tMinPQ);
         }
         solvable = min.board.equals(goal);
         if (solvable) {
@@ -83,13 +114,13 @@ public class Solver {
         }
     }
 
-    private Node<Board> addChildren(Node<Board> currentMinNode, MinPQ<Node<Board>> pq) {
+    private Node addNeighbors(final Node currentMinNode, final MinPQ<Node> pq) {
         for (Board neighbor : currentMinNode.board.neighbors()) {
             if (currentMinNode.parent == null || !neighbor.equals(currentMinNode.parent.board)) {
-                neighbor.setMoves(moves);
                 // set new neighbor node parent
-                Node<Board> node = new Node<>(neighbor);
+                Node node = new Node(neighbor);
                 node.parent = currentMinNode;
+                node.moves++;
                 // enqueue neighbor
                 pq.insert(node);
             }
@@ -98,7 +129,7 @@ public class Solver {
         return pq.delMin();
     }
 
-    private void buildResultPath(Node<Board> currentNode) {
+    private void buildResultPath(Node currentNode) {
         // already solved
         if (currentNode.parent == null) {
             solution.push(currentNode.board);
@@ -110,7 +141,7 @@ public class Solver {
         }
     }
 
-    private void initGoal(Board initial) {
+    private void initGoal(final Board initial) {
         int[][] ar = new int[initial.dimension()][initial.dimension()];
         for (int i = 0; i < initial.dimension(); i++) {
             for (int j = 0; j < initial.dimension(); j++) {
@@ -121,17 +152,13 @@ public class Solver {
         goal = new Board(ar);
     }
 
-    // test client (see below)
-    private static class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
-        T board;
-        Node<T> parent;
+    private static class Node {
+        private Board board;
+        private Node parent;
+        private int moves;
 
-        public Node(T board) {
+        public Node(Board board) {
             this.board = board;
-        }
-
-        public int compareTo(Node<T> o) {
-            return board.compareTo(o.board);
         }
     }
 }

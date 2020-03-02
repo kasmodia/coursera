@@ -32,27 +32,30 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-// TODO: debug puzzle07.txt
 public class PuzzleChecker {
 
     public static void main(String[] args) throws IOException {
 
-        List<String> list = new ArrayList<>();
+        List<String> list;
         try (Stream<Path> paths = Files.walk(Paths.get("/Users/arezk/Downloads/8puzzle"))) {
             list = paths
                     .filter(Files::isRegularFile)
                     .map(Path::getFileName)
                     .map(path -> path.toFile().getName())
-                    // .filter(name -> name.endsWith("txt"))
+                    .filter(name -> name.endsWith("txt"))
                     // .filter(name -> !name.contains("14"))
                     // .filter(name -> !name.contains("15"))
                     // .filter(name -> !name.contains("16"))
-                    .filter(name -> name.equals("puzzle04.txt"))
+                    // .filter(name -> !name.contains("23"))
+                    // .filter(name -> !name.contains("25"))
+                    // .filter(name -> !name.contains("26"))
+                    // .filter(name -> !name.contains("27"))
+                    // .filter(name -> !name.contains("28"))
+                    // .filter(name -> name.equals("puzzle14.txt"))
                     .sorted()
                     .collect(Collectors.toList());
         }
@@ -77,3 +80,4 @@ public class PuzzleChecker {
         }
     }
 }
+

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c1e4f978-b3bd-4ae1-84e9-9e1170bce808" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="4780beba-7c78-4e01-bea5-aeab73df48bb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PuzzleChecker.java" beforeDir="false" afterPath="$PROJECT_DIR$/PuzzleChecker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/Solver.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +22,9 @@
   <component name="ErrorTreeViewConfiguration">
     <option name="autoscrollToSource" value="true" />
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="true" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="8puzzle" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -72,6 +75,7 @@
       <option name="MAIN_CLASS_NAME" value="PuzzleChecker" />
       <module name="Algorithms, Part I" />
       <option name="PROGRAM_PARAMETERS" value="puzzle2x2-01.txt" />
+      <option name="VM_PARAMETERS" value="-Xmx3000m" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -86,14 +90,14 @@
     </configuration>
     <list>
       <item itemvalue="Application.Board" />
-      <item itemvalue="Application.Solver" />
       <item itemvalue="Application.PuzzleChecker" />
+      <item itemvalue="Application.Solver" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.PuzzleChecker" />
-        <item itemvalue="Application.Solver" />
         <item itemvalue="Application.Board" />
+        <item itemvalue="Application.Solver" />
       </list>
     </recent_temporary>
   </component>
@@ -102,6 +106,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+      <changelist id="4780beba-7c78-4e01-bea5-aeab73df48bb" name="Default Changelist" comment="" />
       <created>1582093818221</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -109,20 +114,15 @@
     </task>
     <servers />
   </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582704065353">
+    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582989803337">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1582704065353" />
+    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1582989803337" />
+    <state x="507" y="173" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1582975195122">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="507" y="173" key="#com.intellij.ide.macro.MacrosDialog/0.23.1440.877@0.23.1440.877" timestamp="1582975195122" />
     <state x="533" y="178" key="#com.intellij.ide.util.MemberChooser" timestamp="1582799392818">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -135,42 +135,42 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="252" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1440.877@0.23.1440.877" timestamp="1582802314683" />
-    <state width="1339" height="466" key="DebuggerActiveHint" timestamp="1582806572132">
+    <state width="1339" height="466" key="DebuggerActiveHint" timestamp="1582975272229">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1339" height="466" key="DebuggerActiveHint/0.23.1440.877@0.23.1440.877" timestamp="1582806572132" />
-    <state width="1398" height="385" key="GridCell.Tab.0.bottom" timestamp="1582806638587">
+    <state width="1339" height="466" key="DebuggerActiveHint/0.23.1440.877@0.23.1440.877" timestamp="1582975272229" />
+    <state width="1398" height="237" key="GridCell.Tab.0.bottom" timestamp="1583051371748">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="385" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1582806638587" />
-    <state width="1398" height="385" key="GridCell.Tab.0.center" timestamp="1582806638586">
+    <state width="1398" height="237" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1583051371748" />
+    <state width="1398" height="237" key="GridCell.Tab.0.center" timestamp="1583051371746">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="385" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1582806638586" />
-    <state width="1398" height="385" key="GridCell.Tab.0.left" timestamp="1582806638585">
+    <state width="1398" height="237" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1583051371746" />
+    <state width="1398" height="237" key="GridCell.Tab.0.left" timestamp="1583051371745">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="385" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1582806638585" />
-    <state width="1398" height="385" key="GridCell.Tab.0.right" timestamp="1582806638586">
+    <state width="1398" height="237" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1583051371745" />
+    <state width="1398" height="237" key="GridCell.Tab.0.right" timestamp="1583051371747">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="385" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1582806638586" />
-    <state width="1398" height="237" key="GridCell.Tab.1.bottom" timestamp="1582806617337">
+    <state width="1398" height="237" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1583051371747" />
+    <state width="1398" height="237" key="GridCell.Tab.1.bottom" timestamp="1583051371750">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="237" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1582806617337" />
-    <state width="1398" height="237" key="GridCell.Tab.1.center" timestamp="1582806617336">
+    <state width="1398" height="237" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1583051371750" />
+    <state width="1398" height="237" key="GridCell.Tab.1.center" timestamp="1583051371749">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="237" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1582806617336" />
-    <state width="1398" height="237" key="GridCell.Tab.1.left" timestamp="1582806617335">
+    <state width="1398" height="237" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1583051371749" />
+    <state width="1398" height="237" key="GridCell.Tab.1.left" timestamp="1583051371748">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="237" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1582806617335" />
-    <state width="1398" height="237" key="GridCell.Tab.1.right" timestamp="1582806617336">
+    <state width="1398" height="237" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1583051371748" />
+    <state width="1398" height="237" key="GridCell.Tab.1.right" timestamp="1583051371750">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="237" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1582806617336" />
+    <state width="1398" height="237" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1583051371750" />
     <state x="308" y="211" key="IDE.errors.dialog" timestamp="1582801430202">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -179,10 +179,14 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="536" y="386" key="ReplaceDuplicatesPrompt/0.23.1440.877@0.23.1440.877" timestamp="1582796185601" />
-    <state width="500" height="445" key="SwitcherDM" timestamp="1582806337528">
+    <state x="472" y="179" key="RollbackChangesDialog" timestamp="1582978480384">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="500" height="445" key="SwitcherDM/0.23.1440.877@0.23.1440.877" timestamp="1582806337528" />
+    <state x="472" y="179" key="RollbackChangesDialog/0.23.1440.877@0.23.1440.877" timestamp="1582978480384" />
+    <state width="500" height="445" key="SwitcherDM" timestamp="1583051169745">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="500" height="445" key="SwitcherDM/0.23.1440.877@0.23.1440.877" timestamp="1583051169745" />
     <state width="1248" height="439" key="XDebugger.FullValuePopup" timestamp="1582803642284">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -195,22 +199,22 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="293" y="204" width="854" height="590" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.23.1440.877@0.23.1440.877" timestamp="1582617428607" />
-    <state x="458" y="221" width="524" height="484" key="extract.method.dialog" timestamp="1582801853223">
+    <state x="458" y="221" width="524" height="484" key="extract.method.dialog" timestamp="1583048241071">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="458" y="221" width="524" height="484" key="extract.method.dialog/0.23.1440.877@0.23.1440.877" timestamp="1582801853223" />
-    <state x="400" y="218" width="639" height="486" key="find.popup" timestamp="1582181170444">
+    <state x="458" y="221" width="524" height="484" key="extract.method.dialog/0.23.1440.877@0.23.1440.877" timestamp="1583048241071" />
+    <state x="400" y="218" width="639" height="486" key="find.popup" timestamp="1583051245315">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="400" y="218" width="639" height="486" key="find.popup/0.23.1440.877@0.23.1440.877" timestamp="1582181170444" />
+    <state x="400" y="218" width="639" height="486" key="find.popup/0.23.1440.877@0.23.1440.877" timestamp="1583051245315" />
     <state x="428" y="84" key="refactoring.ChangeSignatureDialog" timestamp="1582805926977">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="428" y="84" key="refactoring.ChangeSignatureDialog/0.23.1440.877@0.23.1440.877" timestamp="1582805926977" />
-    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1582799266576">
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1583045450920">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1582799266576" />
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1583045450920" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
