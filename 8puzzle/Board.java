@@ -1,7 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 
 public class Board {
 
@@ -9,6 +8,8 @@ public class Board {
     private int n;
     private int hamming = -1;
     private int manhattan = -1;
+    private List<Board> neighbors;
+    private int[] zero;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -98,6 +99,8 @@ public class Board {
 
     // is this board the goal board?
     public boolean isGoal() {
+        if (tiles[n -1][n - 1] != 0)
+            return false;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 final int expectedValue = goalValue(i, j);
@@ -122,14 +125,11 @@ public class Board {
         return Arrays.deepEquals(this.tiles, that.tiles);
     }
 
-    public int hashCode() {
-        return Objects.hash(tiles);
-    }
-
     // all neighboring boards
     public Iterable<Board> neighbors() {
         // find empty tile
-        int[] zero = findZero();
+        if (zero != null) return findNeighbors(zero);
+        zero = findZero();
         return findNeighbors(zero);
     }
 
@@ -146,8 +146,9 @@ public class Board {
         return zero;
     }
 
-    private Set<Board> findNeighbors(final int[] zero) {
-        Set<Board> neighbors = new HashSet<>();
+    private List<Board> findNeighbors(final int[] zero) {
+        if (neighbors != null) return neighbors;
+        neighbors = new ArrayList<>();
         final int[][] a1 = exchange(zero[0], zero[1], zero[0] - 1, zero[1]);
         if (a1 != null) neighbors.add(new Board(a1));
         final int[][] a2 = exchange(zero[0], zero[1], zero[0] + 1, zero[1]);

@@ -10,16 +10,17 @@ import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Comparator;
-import java.util.Objects;
 
 public class Solver {
 
-    private static Comparator<Node> comparator = (Node o1, Node o2) -> {
+    private static Comparator<Node> comparator = (o1, o2) -> {
         if (o1 == null) return 1;
         if (o2 == null) return -1;
-        return Integer.compare(o1.board.manhattan() + o1.moves, o2.board.manhattan() + o2.moves);
+        if (o1.getPriority() == o2.getPriority())
+            return Integer.compare(o1.hamming, o2.hamming);
+        else
+            return Integer.compare(o1.getPriority(), o2.getPriority());
     };
-    private Board goal;
     private Stack<Board> solution = new Stack<>();
     private boolean solvable;
 
@@ -58,13 +59,8 @@ public class Solver {
         }
     }
 
-    public int hashCode() {
-        return Objects.hash(goal);
-    }
-
     private void init(final Board initial) {
         if (initial == null) throw new IllegalArgumentException("Null argument");
-        initGoal(initial);
     }
 
     private static void testComparator() {
@@ -104,11 +100,11 @@ public class Solver {
     private void solve(final MinPQ<Node> minPQ, final MinPQ<Node> tMinPQ) {
         Node min = minPQ.delMin();
         Node tmin = tMinPQ.delMin();
-        while (!min.board.equals(goal) && !tmin.board.equals(goal)) {
+        while (!min.board.isGoal() && !tmin.board.isGoal()) {
             min = addNeighbors(min, minPQ);
             tmin = addNeighbors(tmin, tMinPQ);
         }
-        solvable = min.board.equals(goal);
+        solvable = min.board.isGoal();
         if (solvable) {
             buildResultPath(min);
         }
@@ -120,7 +116,8 @@ public class Solver {
                 // set new neighbor node parent
                 Node node = new Node(neighbor);
                 node.parent = currentMinNode;
-                node.moves++;
+                currentMinNode.moves++;
+                node.moves = currentMinNode.moves;
                 // enqueue neighbor
                 pq.insert(node);
             }
@@ -141,24 +138,21 @@ public class Solver {
         }
     }
 
-    private void initGoal(final Board initial) {
-        int[][] ar = new int[initial.dimension()][initial.dimension()];
-        for (int i = 0; i < initial.dimension(); i++) {
-            for (int j = 0; j < initial.dimension(); j++) {
-                ar[i][j] = (i * initial.dimension()) + j + 1;
-            }
-        }
-        ar[initial.dimension() - 1][initial.dimension() - 1] = 0;
-        goal = new Board(ar);
-    }
-
     private static class Node {
         private Board board;
         private Node parent;
         private int moves;
+        private int manhattan;
+        private int hamming;
 
         public Node(Board board) {
             this.board = board;
+            this.manhattan = board.manhattan();
+            this.hamming = board.hamming();
+        }
+
+        public int getPriority() {
+            return manhattan + moves;
         }
     }
 }
