@@ -21,17 +21,17 @@ public class Solver {
         else
             return Integer.compare(o1.getPriority(), o2.getPriority());
     };
-    private Stack<Board> solution = new Stack<>();
     private boolean solvable;
+    private Node lastMin;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(final Board initial) {
-        init(initial);
+        if (initial == null) throw new IllegalArgumentException("Null argument");
         MinPQ<Node> minPQ = new MinPQ<>(comparator);
         minPQ.insert(new Node(initial));
-        MinPQ<Node> tMinPQ = new MinPQ<>(comparator);
-        tMinPQ.insert(new Node(initial.twin()));
-        solve(minPQ, tMinPQ);
+        MinPQ<Node> twinMinPQ = new MinPQ<>(comparator);
+        twinMinPQ.insert(new Node(initial.twin()));
+        solve(minPQ, twinMinPQ);
     }
 
     public static void main(String[] args) {
@@ -57,10 +57,6 @@ public class Solver {
             for (Board board : solver.solution())
                 StdOut.println(board);
         }
-    }
-
-    private void init(final Board initial) {
-        if (initial == null) throw new IllegalArgumentException("Null argument");
     }
 
     private static void testComparator() {
@@ -89,12 +85,12 @@ public class Solver {
 
     // min number of moves to solve initial board
     public int moves() {
-        return solution.isEmpty() ? 0 : solution.size() - 1;
+        return solvable ? buildResultPath(lastMin).size() - 1 : -1;
     }
 
     // sequence of boards in a shortest solution
     public Iterable<Board> solution() {
-        return solution.isEmpty() ? null : solution;
+        return solvable ? buildResultPath(lastMin) : null;
     }
 
     private void solve(final MinPQ<Node> minPQ, final MinPQ<Node> tMinPQ) {
@@ -105,37 +101,30 @@ public class Solver {
             tmin = addNeighbors(tmin, tMinPQ);
         }
         solvable = min.board.isGoal();
-        if (solvable) {
-            buildResultPath(min);
-        }
+        if (solvable) lastMin = min;
     }
 
     private Node addNeighbors(final Node currentMinNode, final MinPQ<Node> pq) {
         for (Board neighbor : currentMinNode.board.neighbors()) {
             if (currentMinNode.parent == null || !neighbor.equals(currentMinNode.parent.board)) {
-                // set new neighbor node parent
-                Node node = new Node(neighbor);
-                node.parent = currentMinNode;
-                currentMinNode.moves++;
-                node.moves = currentMinNode.moves;
-                // enqueue neighbor
-                pq.insert(node);
+                Node neighborNode = new Node(neighbor);
+                neighborNode.parent = currentMinNode;
+                neighborNode.moves = currentMinNode.moves + 1;
+                pq.insert(neighborNode);
             }
         }
-
         return pq.delMin();
     }
 
-    private void buildResultPath(Node currentNode) {
-        // already solved
-        if (currentNode.parent == null) {
-            solution.push(currentNode.board);
-            return;
-        }
+    private Stack<Board> buildResultPath(Node currentNode) {
+        Stack<Board> solution = new Stack<>();
+        solution.push(currentNode.board);
+        currentNode = currentNode.parent;
         while (currentNode != null) {
             solution.push(currentNode.board);
             currentNode = currentNode.parent;
         }
+        return solution;
     }
 
     private static class Node {
