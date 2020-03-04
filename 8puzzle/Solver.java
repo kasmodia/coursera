@@ -17,7 +17,7 @@ public class Solver {
         if (o1 == null) return 1;
         if (o2 == null) return -1;
         if (o1.getPriority() == o2.getPriority())
-            return Integer.compare(o1.hamming, o2.hamming);
+            return Integer.compare(o1.getHamming(), o2.getHamming());
         else
             return Integer.compare(o1.getPriority(), o2.getPriority());
     };
@@ -131,17 +131,25 @@ public class Solver {
         private Board board;
         private Node parent;
         private int moves;
-        private int manhattan;
-        private int hamming;
+        private int hamming = -1;
+        private int manhattan = -1;
 
         public Node(Board board) {
             this.board = board;
-            this.manhattan = board.manhattan();
-            this.hamming = board.hamming();
         }
 
         public int getPriority() {
-            return manhattan + moves;
+            return getManhattan() + moves;
+        }
+
+        public int getManhattan() {
+            if (manhattan == -1) manhattan = board.manhattan();
+            return manhattan;
+        }
+
+        public int getHamming() {
+            if (hamming == -1) hamming = board.hamming();
+            return hamming;
         }
     }
 }

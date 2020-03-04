@@ -6,10 +6,6 @@ public class Board {
 
     private int[][] tiles;
     private int n;
-    private int hamming = -1;
-    private int manhattan = -1;
-    private List<Board> neighbors;
-    private int[] zero;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -43,9 +39,7 @@ public class Board {
 
     // number of tiles out of place
     public int hamming() {
-        if (hamming != -1)
-            return hamming;
-        hamming = 0;
+        int hamming = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 final int goalValue = goalValue(i, j);
@@ -59,9 +53,7 @@ public class Board {
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
-        if (manhattan != -1)
-            return manhattan;
-        manhattan = 0;
+        int manhattan = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 int goalValue = goalValue(i, j);
@@ -128,9 +120,7 @@ public class Board {
     // all neighboring boards
     public Iterable<Board> neighbors() {
         // find empty tile
-        if (zero != null) return findNeighbors(zero);
-        zero = findZero();
-        return findNeighbors(zero);
+        return findNeighbors(findZero());
     }
 
     private int[] findZero() {
@@ -147,8 +137,7 @@ public class Board {
     }
 
     private List<Board> findNeighbors(final int[] zero) {
-        if (neighbors != null) return neighbors;
-        neighbors = new ArrayList<>();
+        final ArrayList<Board> neighbors = new ArrayList<>();
         final int[][] a1 = exchange(zero[0], zero[1], zero[0] - 1, zero[1]);
         if (a1 != null) neighbors.add(new Board(a1));
         final int[][] a2 = exchange(zero[0], zero[1], zero[0] + 1, zero[1]);
