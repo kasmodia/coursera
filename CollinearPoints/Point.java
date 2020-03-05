@@ -1,5 +1,15 @@
-import java.util.Comparator;
+/******************************************************************************
+ *  Compilation:  javac Point.java
+ *  Execution:    java Point
+ *  Dependencies: none
+ *
+ *  An immutable data type for points in the plane.
+ *  For use on Coursera, Algorithms Part I programming assignment.
+ *
+ ******************************************************************************/
+
 import edu.princeton.cs.algs4.StdDraw;
+import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
 
@@ -50,11 +60,11 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
-        if (that == null) throw new IllegalArgumentException("Point cannot be null");
+        if (that == null) throw new NullPointerException("Point cannot be null");
         if (this.x == that.x && this.y == that.y) return Double.NEGATIVE_INFINITY;
-        if (this.x == that.x) return +0.0;
-        if (this.y == that.y) return Double.POSITIVE_INFINITY;
-        return (double)(that.y - this.y) / (double)(that.x - this.x);
+        if (this.x == that.x) return Double.POSITIVE_INFINITY;
+        if (this.y == that.y) return +0.0;
+        return ((double)(that.y - this.y)) / ((double)(that.x - this.x));
     }
 
     /**
@@ -71,11 +81,12 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         /* YOUR CODE HERE */
-        if (that == null) throw new IllegalArgumentException("Point cannot be null");
+        if (that == null) throw new NullPointerException("Point cannot be null");
         if (this.y < that.y) return -1;
-        if (this.y == that.y && this.x < that.x) return -1;
-        if (this.y == that.y && this.x == that.x) return 0;
-        return 1;
+        if (this.y > that.y) return 1;
+        if (this.x < that.x) return -1;
+        if (this.x > that.x) return 1;
+        else return 0;
     }
 
     /**
@@ -87,10 +98,9 @@ public class Point implements Comparable<Point> {
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
         return (Point one, Point two) -> {
-            if (one == null || two == null) throw new IllegalArgumentException("Both points should not be null");
-            if (slopeTo(one) < slopeTo(two)) return -1;
-            if (slopeTo(one) == slopeTo(two)) return 0;
-            return 1;
+            if (one == null || two == null) throw new NullPointerException("Both points should not be null");
+            if (Double.compare(slopeTo(one), slopeTo(two)) < 0) return -1;
+            return Double.compare(slopeTo(one), slopeTo(two)) == 0 ? 0 : 1;
         };
     }
 
@@ -115,7 +125,7 @@ public class Point implements Comparable<Point> {
         Point one = new Point(-1, -1);
         Point two = new Point(1, 1);
         System.out.println(one + " should be less than " + two);
-        System.out.println(one.compareTo(two) == -1);
+        System.out.println(one.compareTo(two) < 0);
         System.out.println("Slope should be 1");
         System.out.println(one.slopeTo(two) == 1.0);
 
@@ -127,17 +137,19 @@ public class Point implements Comparable<Point> {
 
         one = new Point(2, 2);
         System.out.println(one + " should be greater than " + two);
-        System.out.println(one.compareTo(two) == 1);
+        System.out.println(one.compareTo(two) > 0);
 
         one = new Point(-2, -1);
         two = new Point(4, 3);
         System.out.println(one + " should be less than " + two);
-        System.out.println("Slope should be " + 2d/3d);
-        System.out.println(one.slopeTo(two) == 2d/3d);
+        System.out.println("Slope should be " + 2.0d/3.0d);
+        System.out.println(Double.compare(one.slopeTo(two), 2.0d / 3.0d) == 0);
 
         one = new Point(-1, 4);
         two = new Point(2, -2);
-        System.out.println(one + " should be less than " + two);
+
+        System.out.println(one + " should be greater than " + two);
+        System.out.println(one.compareTo(two) > 0);
         System.out.println("Slope should be " + -2);
         System.out.println(one.slopeTo(two) == -2);
 

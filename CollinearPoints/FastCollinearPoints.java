@@ -1,112 +1,126 @@
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
 
 public class FastCollinearPoints {
 
-    public static void main(String[] arvs) {
-        Point[] points = new Point[]{
-            new Point(1, 1),
-            new Point(2, 2),
-            new Point(3, 3),
-            new Point(4, 4),
-            new Point(5, 5),
-            new Point(2, 3),
-            new Point(5, 1),
-            new Point(7, 4),
-            new Point(0, 9),
-            new Point(5, 5),
-            new Point(-1, 1)
-        };
-        FastCollinearPoints fcp = new FastCollinearPoints(points);
-        fcp.segments.forEach(seg -> System.out.println(seg.toString()));
+    private final ArrayList<LineSegment> segments = new ArrayList<>();
+
+    public FastCollinearPoints(final Point[] points) {
+        validate(points);
+        findCollinearPoints(points);
     }
 
-    final static int LINE_LENGTH = 4;
-    ArrayList<LineSegment> segments = new ArrayList<>();
-    ArrayList<Pair> pairs = new ArrayList<>();
+    private void validate(Object p) {
+        if (p == null) throw new IllegalArgumentException("Object cannot be null");
+    }
 
-    public FastCollinearPoints(Point[] points) {
-        for (int p = 0; p < points.length - 1; p++) {
-            for (int q = p + 1; q < points.length; q++) {
-                pairs.add(new Pair(points[p], points[q]));
-            }
+    public static void main(final String[] args) {
+        // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
         }
-        System.out.println("List before sorting>>>>>>>>>>> ");
-        pairs.stream().forEach(item -> System.out.println(item.slope));
-        Pair[] pairsArray = pairs.toArray(new Pair[0]);
-        Arrays.sort(pairsArray);
-        // sortPairs(new ArrayList<>(pairs), 0, pairs.size() - 1);
-        System.out.println("List after sorting>>>>>>>>>>>> ");
-        Stream.of(pairsArray).forEach(item -> System.out.println(item.slope));
-        pairs = new ArrayList<Pair>(Arrays.asList(pairsArray));
-        
-        findCollinearPoints();
-        System.out.println(segments);
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
     }
 
     public LineSegment[] segments() {
         return segments.toArray(new LineSegment[segments.size()]);
     }
 
-    private void sortPairs(ArrayList<Pair> aux, int low, int hi) {
-        if (hi == low) return;
-        int mid = (hi + low) / 2;
-        sortPairs(aux, low, mid);
-        sortPairs(aux, mid + 1, hi);
-        merge(aux, low, mid, hi);
+    private void sort(Point[] points, Point[] aux, int low, int hi) {
+        if (hi <= low) return;
+        int mid = low + (hi - low) / 2;
+        sort(points, aux, low, mid);
+        sort(points, aux, mid + 1, hi);
+        merge(points, aux, low, hi, mid);
     }
 
-    private void merge(ArrayList<Pair> aux, int low, int mid, int hi) {
-        int left = low, right = mid + 1;
-        for (int i = low; i <= hi; i++) {
-            aux.set(i, pairs.get(i));
-        }
+    private void merge(Point[] a, Point[] aux, int low, int hi, int mid) {
+        int i = low, j = mid + 1;
+        System.arraycopy(a, low, aux, low, hi - low + 1);
 
         for (int k = low; k <= hi; k++) {
-            if (left > mid)
-                pairs.set(k, aux.get(right++));
-            else if (right > hi) 
-                pairs.set(k, aux.get(left++));
-            else if (aux.get(right).compareTo(pairs.get(left)) <= 0) 
-                pairs.set(k, aux.get(right++));
-            else pairs.set(k, aux.get(left++));
+            if (i > mid) a[k] = aux[j++];
+            else if (j > hi) a[k] = aux[i++];
+            else if (aux[i] == null || aux[j] == null)
+                throw new IllegalArgumentException("Null point");
+            else if (aux[i].compareTo(aux[j]) == 0)
+                throw new IllegalArgumentException("Duplicated point");
+            else if (aux[i].compareTo(aux[j]) < 0) a[k] = aux[i++];
+            else a[k] = aux[j++];
         }
     }
 
-    private void findCollinearPoints() {
-        Pair starting = pairs.get(0);
-        double lastSlope = 0;
-        int counter = 0;
-        for (int i = 1; i < pairs.size(); i++) {
-            if (pairs.get(i).slope == lastSlope)
-                ++counter;
-            else {
-                if (counter >= LINE_LENGTH) 
-                    segments.add(new LineSegment(starting.p, pairs.get(i).q));
-                
-                starting = pairs.get(i);
-                counter = 0;
-                lastSlope = pairs.get(i).slope;
+    private void findCollinearPoints(Point[] points) {
+        Point[] aux = points.clone();
+        for (int p = 0; p < aux.length - 3; p++) {
+            final List<Point> sortedList = Arrays.asList(aux);
+            System.out.println("Point p: " + aux[p]);
+            System.out.println("points sorted according to slopes with p: ");
+            Collections.sort(sortedList, aux[p].slopeOrder());
+            System.out.println(sortedList);
+            int finalP = p;
+            sortedList.stream().forEach(point -> System.out.print(", " + aux[finalP].slopeTo(point)));
+            System.out.println();
+            checkSegments(aux[p], sortedList);
+        }
+    }
+
+    private void checkSegments(Point p, final List<Point> otherPointsSortedBySlope) {
+        int i = 1, match = 0;
+        while (i < otherPointsSortedBySlope.size()) {
+            if (p.compareTo(otherPointsSortedBySlope.get(i)) == 0) {
+                match = 0;
+                i++;
+                continue;
             }
+            if (p.slopeTo(otherPointsSortedBySlope.get(i)) == p
+                    .slopeTo(otherPointsSortedBySlope.get(i - 1))) {
+                match++;
+            }
+            else {
+                if (match >= 3) {
+                    segments.add(new LineSegment(p, otherPointsSortedBySlope.get(i)));
+                    match = 0;
+                    i++;
+                    break;
+                }
+                match = 0;
+            }
+            i++;
         }
-        if (counter >= LINE_LENGTH) 
-            segments.add(new LineSegment(starting.p, pairs.get(pairs.size() - 1).q));
+        if (match >= 3) {
+            segments.add(new LineSegment(p, otherPointsSortedBySlope.get(i)));
+        }
     }
 
-    private static class Pair implements Comparable<Pair> {
-        Point p;
-        Point q;
-        double slope;
-
-        public Pair(Point p, Point q) {
-            this.p = p;
-            this.q = q;
-            this.slope = p.slopeTo(q);
-        }
-
-        public int compareTo(Pair that) {
-            return this.slope > that.slope ? 1 : this.slope < that.slope ? -1 : 0;
-        }
+    public int numberOfSegments() {
+        return segments.size();
     }
 }
