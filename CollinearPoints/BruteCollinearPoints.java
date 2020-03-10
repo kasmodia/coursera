@@ -88,7 +88,12 @@ public class BruteCollinearPoints {
         StdDraw.show();
     }
 
-    private void validate(final Object p) {
+    private void validate(final Point[] a) {
+        if (a == null) throw new IllegalArgumentException("Object cannot be null");
+        for (Point p : a) if (p == null) throw new IllegalArgumentException("Object cannot be null");
+    }
+
+    private void validate(final Point p) {
         if (p == null) throw new IllegalArgumentException("Object cannot be null");
     }
 
