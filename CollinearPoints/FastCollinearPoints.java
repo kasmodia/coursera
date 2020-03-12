@@ -9,6 +9,7 @@ import java.util.List;
 
 public class FastCollinearPoints {
 
+    private static final int LINE_SEGMENT_MIN_LENGTH = 3;
     private final ArrayList<LineSegment> lineSegments = new ArrayList<>();
 
     public FastCollinearPoints(final Point[] points) {
@@ -20,10 +21,6 @@ public class FastCollinearPoints {
         if (a == null) throw new IllegalArgumentException("Object cannot be null");
         for (Point p : a)
             if (p == null) throw new IllegalArgumentException("Object cannot be null");
-    }
-
-    private void validate(final Point p) {
-        if (p == null) throw new IllegalArgumentException("Object cannot be null");
     }
 
     public static void main(final String[] args) {
@@ -60,7 +57,7 @@ public class FastCollinearPoints {
     }
 
     public LineSegment[] segments() {
-        return lineSegments.toArray(new LineSegment[]{});
+        return lineSegments.toArray(new LineSegment[] { });
     }
 
     private void findCollinearPoints(Point[] points) {
@@ -68,20 +65,22 @@ public class FastCollinearPoints {
         for (Point point : aux) {
             final List<Point> slopeSortedPoints = new ArrayList<Point>(Arrays.asList(aux));
             slopeSortedPoints.sort(point.slopeOrder());
-            makeSegments(point, slopeSortedPoints);
+            searchSortedPoints(point, slopeSortedPoints.subList(1, slopeSortedPoints.size()));
         }
     }
 
-    private void makeSegments(final Point point, final List<Point> slopeSortedPoints) {
+    private void searchSortedPoints(final Point point, final List<Point> slopeSortedPoints) {
         List<Point> equalSlopes = new ArrayList<>();
-        slopeSortedPoints.remove(0);
+        if (slopeSortedPoints.get(0).slopeTo(point) == Double.NEGATIVE_INFINITY)
+            throw new IllegalArgumentException("Equal points passed");
         equalSlopes.add(slopeSortedPoints.get(0));
 
-        for (Point slopeSortedPoint : slopeSortedPoints) {
-            if (slopeSortedPoint.slopeTo(point) == Double.NEGATIVE_INFINITY) throw new IllegalArgumentException("Equal points passed");
+        for (int i = 1; i < slopeSortedPoints.size(); i++) {
+            Point slopeSortedPoint = slopeSortedPoints.get(i);
             // add points with equal slopes
-            if (slopeSortedPoint.slopeTo(point) == equalSlopes.get(0).slopeTo(point))
+            if (slopeSortedPoint.slopeTo(point) == equalSlopes.get(0).slopeTo(point)) {
                 equalSlopes.add(slopeSortedPoint);
+            }
             else {
                 // no more equal slopes, continue searching starting from current point
                 checkAndAddSegment(point, equalSlopes);
@@ -93,12 +92,15 @@ public class FastCollinearPoints {
     }
 
     private void checkAndAddSegment(final Point point, final List<Point> equalSlopes) {
-        if (equalSlopes.size() > 2) {
+        if (equalSlopes.size() >= LINE_SEGMENT_MIN_LENGTH) {
+            equalSlopes.add(point);
             equalSlopes.sort(pointsComparator());
-            if (point.compareTo(equalSlopes.get(0)) > 0)
-                lineSegments.add(new LineSegment(equalSlopes.get(0), point));
-            else
-                lineSegments.add(new LineSegment(point, equalSlopes.get(equalSlopes.size() - 1)));
+            LineSegment newSegment =
+                    new LineSegment(equalSlopes.get(0),
+                                    equalSlopes.get(equalSlopes.size() - 1));
+            if (lineSegments.stream().noneMatch(
+                    segment -> segment.toString().equals(newSegment.toString())))
+                lineSegments.add(newSegment);
         }
     }
 

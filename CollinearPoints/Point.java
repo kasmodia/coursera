@@ -64,7 +64,7 @@ public class Point implements Comparable<Point> {
         if (this.x == that.x && this.y == that.y) return Double.NEGATIVE_INFINITY;
         if (this.x == that.x) return Double.POSITIVE_INFINITY;
         if (this.y == that.y) return +0.0;
-        return ((double)(that.y - this.y)) / ((double)(that.x - this.x));
+        return (double) (that.y - this.y) / (double) (that.x - this.x);
     }
 
     /**
@@ -84,9 +84,7 @@ public class Point implements Comparable<Point> {
         if (that == null) throw new NullPointerException("Point cannot be null");
         if (this.y < that.y) return -1;
         if (this.y > that.y) return 1;
-        if (this.x < that.x) return -1;
-        if (this.x > that.x) return 1;
-        else return 0;
+        return Integer.compare(this.x, that.x);
     }
 
     /**
@@ -97,7 +95,7 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
-        return (Point one, Point two) -> {
+        return (one, two) -> {
             if (one == null || two == null) throw new NullPointerException("Both points should not be null");
             if (Double.compare(slopeTo(one), slopeTo(two)) < 0) return -1;
             return Double.compare(slopeTo(one), slopeTo(two)) == 0 ? 0 : 1;
