@@ -4,17 +4,25 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class FastCollinearPoints {
 
     private static final int LINE_SEGMENT_MIN_LENGTH = 3;
-    private final ArrayList<LineSegment> lineSegments = new ArrayList<>();
+    private final List<LineSegment> lineSegments = new ArrayList<>();
+    private final List<Point> firstTip = new ArrayList<>();
+    private final List<Point> secondTip = new ArrayList<>();
 
     public FastCollinearPoints(final Point[] points) {
         validate(points);
-        findCollinearPoints(points);
+        List<Point> slopeSortedPoints = Arrays.asList(points);
+        if (points.length <= 1) return;
+        for (Point point : slopeSortedPoints) {
+            slopeSortedPoints.sort(point.slopeOrder());
+            if (slopeSortedPoints.get(1).slopeTo(point) == Double.NEGATIVE_INFINITY)
+                throw new IllegalArgumentException("Equal points passed");
+            searchSortedPoints(point, slopeSortedPoints.subList(1, slopeSortedPoints.size()));
+        }
     }
 
     private void validate(final Point[] a) {
@@ -60,52 +68,47 @@ public class FastCollinearPoints {
         return lineSegments.toArray(new LineSegment[] { });
     }
 
-    private void findCollinearPoints(Point[] points) {
-        Point[] aux = points.clone();
-        for (Point point : aux) {
-            final List<Point> slopeSortedPoints = new ArrayList<Point>(Arrays.asList(aux));
-            slopeSortedPoints.sort(point.slopeOrder());
-            searchSortedPoints(point, slopeSortedPoints.subList(1, slopeSortedPoints.size()));
-        }
-    }
-
-    private void searchSortedPoints(final Point point, final List<Point> slopeSortedPoints) {
+    private void searchSortedPoints(final Point anchorPoint, final List<Point> slopeSortedPoints) {
         List<Point> equalSlopes = new ArrayList<>();
-        if (slopeSortedPoints.get(0).slopeTo(point) == Double.NEGATIVE_INFINITY)
-            throw new IllegalArgumentException("Equal points passed");
         equalSlopes.add(slopeSortedPoints.get(0));
 
         for (int i = 1; i < slopeSortedPoints.size(); i++) {
-            Point slopeSortedPoint = slopeSortedPoints.get(i);
+            Point currentPoint = slopeSortedPoints.get(i);
             // add points with equal slopes
-            if (slopeSortedPoint.slopeTo(point) == equalSlopes.get(0).slopeTo(point)) {
-                equalSlopes.add(slopeSortedPoint);
+            if (currentPoint.slopeTo(anchorPoint) == equalSlopes.get(0).slopeTo(anchorPoint)) {
+                equalSlopes.add(currentPoint);
             }
             else {
-                // no more equal slopes, continue searching starting from current point
-                checkAndAddSegment(point, equalSlopes);
+                // no more equal slopes, continue searching starting from current anchorPoint
+                checkAndAddSegment(anchorPoint, equalSlopes);
                 equalSlopes.clear();
-                equalSlopes.add(slopeSortedPoint);
+                equalSlopes.add(currentPoint);
             }
         }
-        checkAndAddSegment(point, equalSlopes);
+        checkAndAddSegment(anchorPoint, equalSlopes);
     }
 
     private void checkAndAddSegment(final Point point, final List<Point> equalSlopes) {
         if (equalSlopes.size() >= LINE_SEGMENT_MIN_LENGTH) {
             equalSlopes.add(point);
-            equalSlopes.sort(pointsComparator());
+            equalSlopes.sort(Point::compareTo);
             LineSegment newSegment =
                     new LineSegment(equalSlopes.get(0),
                                     equalSlopes.get(equalSlopes.size() - 1));
-            if (lineSegments.stream().noneMatch(
-                    segment -> segment.toString().equals(newSegment.toString())))
+            boolean found = false;
+            for (int i = 0; i < firstTip.size(); i++) {
+                if (firstTip.get(i).compareTo(equalSlopes.get(0)) == 0)
+                    if (secondTip.get(i).compareTo(equalSlopes.get(equalSlopes.size() - 1)) == 0) {
+                        found = true;
+                        break;
+                    }
+            }
+            if (!found) {
                 lineSegments.add(newSegment);
+                firstTip.add(equalSlopes.get(0));
+                secondTip.add(equalSlopes.get(equalSlopes.size() - 1));
+            }
         }
-    }
-
-    private Comparator<Point> pointsComparator() {
-        return Point::compareTo;
     }
 
     public int numberOfSegments() {
