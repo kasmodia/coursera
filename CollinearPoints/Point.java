@@ -97,7 +97,8 @@ public class Point implements Comparable<Point> {
         /* YOUR CODE HERE */
         return (one, two) -> {
             if (one == null || two == null) throw new NullPointerException("Both points should not be null");
-            return Double.compare(slopeTo(one), slopeTo(two));
+            final int slopeCompare = Double.compare(slopeTo(one), slopeTo(two));
+            return slopeCompare == 0 ?  one.compareTo(two) : slopeCompare;
         };
     }
 

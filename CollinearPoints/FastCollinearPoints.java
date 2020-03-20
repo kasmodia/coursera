@@ -10,8 +10,8 @@ public class FastCollinearPoints {
 
     private static final int LINE_SEGMENT_MIN_LENGTH = 3;
     private final List<LineSegment> lineSegments = new ArrayList<>();
-    private final List<Point> smallerTip = new ArrayList<>();
-    private final List<Point> biggerTip = new ArrayList<>();
+    private final List<LineSlope> smallerTip = new ArrayList<>();
+    private final List<LineSlope> biggerTip = new ArrayList<>();
 
     public FastCollinearPoints(final Point[] in) {
         validate(in);
@@ -19,14 +19,58 @@ public class FastCollinearPoints {
         if (in.length <= 1) return;
         for (Point point : points) {
             List<Point> aux = new ArrayList<>(points);
-            // TODO: 
-            //  do manual sorting here and create a new list of LineSlope which stores the slopes
-            // then pass this list to searchSortedPoints()
-            // this way you don't have to call slopeTo again in searchSortedPoints()
             aux.sort(point.slopeOrder());
-            if (aux.get(1).slopeTo(point) == Double.NEGATIVE_INFINITY)
+            // LineSlope[] slopes = new LineSlope[points.size()];
+            // sort(aux, point, slopes);
+            if (slopes[1].getSlope() == Double.NEGATIVE_INFINITY)
                 throw new IllegalArgumentException("Equal points passed");
-            searchSortedPoints(point, aux.subList(1, aux.size()));
+            searchSortedPoints(point, Arrays.asList(slopes).subList(1, slopes.length));
+        }
+    }
+
+    private void sort(List<Point> otherPoints, Point anchorPoint, LineSlope[] slopesToAnchor) {
+        mergesort(otherPoints, new ArrayList<Point>(otherPoints), anchorPoint, slopesToAnchor, 0,
+                  otherPoints.size() - 1);
+    }
+
+    private void mergesort(List<Point> otherPoints, List<Point> aux,
+                           Point anchorPoint, LineSlope[] slopesToAnchor, int low, int hi) {
+        if (low < hi) {
+            int mid = (low + hi) / 2;
+            mergesort(otherPoints, aux, anchorPoint, slopesToAnchor, low, mid);
+            mergesort(otherPoints, aux, anchorPoint, slopesToAnchor, mid + 1, hi);
+            merge(otherPoints, aux, anchorPoint, slopesToAnchor, low, mid, hi);
+        }
+    }
+
+    private void merge(List<Point> otherPoints, List<Point> aux,
+                       Point anchorPoint, LineSlope[] slopesToAnchor, int low, int mid,
+                       int hi) {
+        int i = low, j = mid + 1;
+        for (int k = low; k <= hi; k++) {
+            aux.set(k, otherPoints.get(k));
+        }
+        for (int k = low; k <= hi; k++) {
+            if (i > mid) {
+                otherPoints.set(k, aux.get(j));
+                slopesToAnchor[k] = new LineSlope(aux.get(j), anchorPoint.slopeTo(aux.get(j++)));
+            }
+            else if (j > hi) {
+                otherPoints.set(k, aux.get(i));
+                slopesToAnchor[k] = new LineSlope(aux.get(i), anchorPoint.slopeTo(aux.get(i++)));
+            }
+            else {
+                final double slopToI = anchorPoint.slopeTo(aux.get(i));
+                final double slopeToJ = anchorPoint.slopeTo(aux.get(j));
+                if (slopToI < slopeToJ) {
+                    otherPoints.set(k, aux.get(i));
+                    slopesToAnchor[k] = new LineSlope(aux.get(i++), slopToI);
+                }
+                else {
+                    otherPoints.set(k, aux.get(j));
+                    slopesToAnchor[k] = new LineSlope(aux.get(j++), slopeToJ);
+                }
+            }
         }
     }
 
@@ -73,18 +117,19 @@ public class FastCollinearPoints {
         return lineSegments.toArray(new LineSegment[] { });
     }
 
-    private void searchSortedPoints(final Point anchorPoint, final List<Point> slopeSortedPoints) {
-        List<Point> equalSlopes = new ArrayList<>();
-        equalSlopes.add(slopeSortedPoints.get(0));
-        double lastSlope = equalSlopes.get(0).slopeTo(anchorPoint);
+    private void searchSortedPoints(final Point anchorPoint, final List<LineSlope> sortedSlopes) {
+        List<LineSlope> equalSlopes = new ArrayList<>();
+        equalSlopes.add(sortedSlopes.get(0));
+        double lastSlope = equalSlopes.get(0).getSlope();
 
-        for (int i = 1; i < slopeSortedPoints.size(); i++) {
-            Point currentPoint = slopeSortedPoints.get(i);
+        for (int i = 1; i < sortedSlopes.size(); i++) {
+            LineSlope currentPoint = sortedSlopes.get(i);
             // add points with equal slopes
-            double currentSlope = currentPoint.slopeTo(anchorPoint);
+            double currentSlope = currentPoint.getSlope();
             if (currentSlope == lastSlope) {
                 equalSlopes.add(currentPoint);
-            } else {
+            }
+            else {
                 // no more equal slopes, continue searching starting from current anchorPoint
                 checkAndAddSegment(anchorPoint, equalSlopes);
                 equalSlopes.clear();
@@ -95,10 +140,10 @@ public class FastCollinearPoints {
         checkAndAddSegment(anchorPoint, equalSlopes);
     }
 
-    private void checkAndAddSegment(final Point point, final List<Point> equalSlopes) {
+    private void checkAndAddSegment(final Point point, final List<LineSlope> equalSlopes) {
         if (equalSlopes.size() >= LINE_SEGMENT_MIN_LENGTH) {
-            equalSlopes.add(point);
-            equalSlopes.sort(Point::compareTo);
+            equalSlopes.add(new LineSlope(point, Double.NEGATIVE_INFINITY));
+            equalSlopes.sort(LineSlope::compareTo);
             boolean found = false;
             for (int i = 0; i < smallerTip.size(); i++) {
                 if (smallerTip.get(i).compareTo(equalSlopes.get(0)) == 0) {
@@ -109,8 +154,8 @@ public class FastCollinearPoints {
                 }
             }
             if (!found) {
-                lineSegments.add(new LineSegment(equalSlopes.get(0),
-                                                 equalSlopes.get(equalSlopes.size() - 1)));
+                lineSegments.add(new LineSegment(equalSlopes.get(0).getA(),
+                                                 equalSlopes.get(equalSlopes.size() - 1).getA()));
                 smallerTip.add(equalSlopes.get(0));
                 biggerTip.add(equalSlopes.get(equalSlopes.size() - 1));
             }
@@ -123,15 +168,10 @@ public class FastCollinearPoints {
 
     private class LineSlope implements Comparable<LineSlope> {
         private Point a;
-        private Point b;
         private Double slope;
 
-        public LineSlope(Point a, Point b) {
+        public LineSlope(Point a, Double slope) {
             this.a = a;
-            this.b = b;
-        }
-
-        public void setSlope(Double slope) {
             this.slope = slope;
         }
 
@@ -139,13 +179,12 @@ public class FastCollinearPoints {
             return a;
         }
 
-        public Point getB() {
-            return b;
+        public Double getSlope() {
+            return slope;
         }
 
         public int compareTo(LineSlope o) {
-            final int compare = this.a.compareTo(o.a);
-            return compare == 0 ? this.b.compareTo(o.b) : compare;
+            return this.a.compareTo(o.a);
         }
     }
 }
