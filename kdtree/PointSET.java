@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -39,8 +40,16 @@ public class PointSET {
                                        new Point2D(8, 7),
                                        new Point2D(10, 4),
                                        new Point2D(10, 8));
+
+        // test range
         if (!expected.equals(range))
             throw new RuntimeException("range test failed");
+
+        // test nearest
+        if (!set.nearest(new Point2D(1, 6)).equals(new Point2D(2, 6)))
+            throw new RuntimeException("nearest test failed");
+        if (!set.nearest(new Point2D(3, 4)).equals(new Point2D(3, 4)))
+            throw new RuntimeException("nearest test failed");
     }
 
     public boolean isEmpty() {
@@ -66,6 +75,7 @@ public class PointSET {
     }
 
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) throw new IllegalArgumentException("Null rectangle");
         return treeSet.stream()
                       .filter(point2D -> point2D.x() >= rect.xmin()
                               && point2D.y() >= rect.ymin()
@@ -75,6 +85,7 @@ public class PointSET {
     }
 
     public Point2D nearest(Point2D p) {
-        return null;
+        if (p == null) throw new IllegalArgumentException("Null point");
+        return treeSet.stream().min(Comparator.comparingDouble(point -> point.distanceTo(p))).orElse(null);
     }
 }
