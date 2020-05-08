@@ -20,6 +20,7 @@ public class KdTree {
      *********************************************************************
      */
 
+
     public boolean isEmpty() {
         return size == 0;
     }
@@ -38,7 +39,7 @@ public class KdTree {
         if (p == null) throw new IllegalArgumentException("Null point");
         if (contains(p)) return;
         if (root == null) {
-            root = new Node(p);
+            root = new Node(p, X);
             size++;
             return;
         }
@@ -54,39 +55,39 @@ public class KdTree {
     }
 
     private Node traverse(Point2D point) {
-        return traverse(point, root, X);
+        return traverse(point, root);
     }
 
-    private Node traverse(Point2D point, Node currentNode, boolean axis) {
-        int smaller = comparePointWithNode(point, currentNode, axis);
+    private Node traverse(Point2D point, Node currentNode) {
+        int smaller = comparePointWithNode(point, currentNode);
         if (point.x() == currentNode.getVal().x() && point.y() == currentNode.getVal().y())
             return currentNode;
         if (smaller < 0)
-            return goLeft(point, currentNode, currentNode.getLeft(), !axis);
-        return goRight(point, currentNode, currentNode.getRight(), !axis);
+            return goLeft(point, currentNode, currentNode.getLeft());
+        return goRight(point, currentNode, currentNode.getRight());
     }
 
-    private int comparePointWithNode(Point2D point, Node node, boolean axis) {
-        return axis == X ? Double.compare(point.x(), node.getVal().x()) :
+    private int comparePointWithNode(Point2D point, Node node) {
+        return node.getAxis() == X ? Double.compare(point.x(), node.getVal().x()) :
                Double.compare(point.y(), node.getVal().y());
     }
 
-    private Node goLeft(Point2D point, Node parent, Node node, boolean axis) {
+    private Node goLeft(Point2D point, Node parent, Node node) {
         if (node == null || node.getVal() == null) {
-            Node newNode = new Node();
+            Node newNode = new Node(!parent.getAxis());
             parent.setLeft(newNode);
             return newNode;
         }
-        return traverse(point, node, axis);
+        return traverse(point, node);
     }
 
-    private Node goRight(Point2D point, Node parent, Node node, boolean axis) {
+    private Node goRight(Point2D point, Node parent, Node node) {
         if (node == null || node.getVal() == null) {
-            Node newNode = new Node();
+            Node newNode = new Node(!parent.getAxis());
             parent.setRight(newNode);
             return newNode;
         }
-        return traverse(point, node, axis);
+        return traverse(point, node);
     }
 
     public void draw() {
@@ -193,15 +194,16 @@ public class KdTree {
         private Point2D val;
         private boolean axis;
 
-        public Node() {
-
+        public Node(boolean axis) {
+            this.axis = axis;
         }
 
-        public Node(Point2D val) {
+        public Node(Point2D val, boolean axis) {
             this.val = val;
+            this.axis = axis;
         }
 
-        public boolean isAxis() {
+        public boolean getAxis() {
             return axis;
         }
 

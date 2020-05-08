@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c1e4f978-b3bd-4ae1-84e9-9e1170bce808" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/KdTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/KdTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NearestNeighborVisualizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/NearestNeighborVisualizer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PointSET.java" beforeDir="false" afterPath="$PROJECT_DIR$/PointSET.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/input1M.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input200K.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input400K.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input800K.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,14 +215,14 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="499" y="272" key="extract.method.dialog/0.23.1440.877@0.23.1440.877" timestamp="1588947266685" />
-    <state width="373" height="109" key="javadoc.popup.new" timestamp="1588949123539">
+    <state width="373" height="109" key="javadoc.popup.new" timestamp="1588952331491">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="373" height="109" key="javadoc.popup.new/0.23.1440.877@0.23.1440.877" timestamp="1588949123539" />
-    <state x="429" y="244" key="refactoring.ChangeSignatureDialog" timestamp="1588426470687">
+    <state width="373" height="109" key="javadoc.popup.new/0.23.1440.877@0.23.1440.877" timestamp="1588952331491" />
+    <state x="429" y="244" key="refactoring.ChangeSignatureDialog" timestamp="1588951946132">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="429" y="244" key="refactoring.ChangeSignatureDialog/0.23.1440.877@0.23.1440.877" timestamp="1588426470687" />
+    <state x="429" y="244" key="refactoring.ChangeSignatureDialog/0.23.1440.877@0.23.1440.877" timestamp="1588951946132" />
     <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1588946953582">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
