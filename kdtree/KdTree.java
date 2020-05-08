@@ -47,6 +47,12 @@ public class KdTree {
         size++;
     }
 
+    public Iterable<Point2D> range(RectHV rect) {
+        List<Point2D> result = new ArrayList<>();
+        searchNearest(rect, root, X, result);
+        return result;
+    }
+
     private Node traverse(Point2D point) {
         return traverse(point, root, X);
     }
@@ -96,12 +102,6 @@ public class KdTree {
         drawNodes(node.getLeft());
         node.getVal().draw();
         drawNodes(node.getRight());
-    }
-
-    public Iterable<Point2D> range(RectHV rect) {
-        List<Point2D> result = new ArrayList<>();
-        searchNearest(rect, root, X, result);
-        return result;
     }
 
     private void searchNearest(RectHV rect, Node node, boolean axis, List<Point2D> result) {
