@@ -8,6 +8,7 @@ import java.util.List;
 public class KdTree {
 
     private static final boolean X = true;
+    private static final boolean LEFT = true;
     private Node root;
     private int size;
 
@@ -22,6 +23,7 @@ public class KdTree {
     public static void main(String[] args) {
         KdTree kdTree = new KdTree();
         kdTree.createKdTree();
+        kdTree.testDrillDown();
         kdTree.testSize();
         kdTree.testContains();
         kdTree.testRange();
@@ -90,31 +92,45 @@ public class KdTree {
     }
 
     private void testNearestChild() {
-        Node nearestChild = nearestChild(root.getLeft(), new Point2D(2, 2));
+        Node nearestChild = getChild(root.getLeft(), new Point2D(2, 2), true);
         if (!nearestChild.equals(root.getLeft().getLeft()))
             throw new IllegalArgumentException("testNearestChild failed");
 
-        nearestChild = nearestChild(root.getLeft(), new Point2D(10, 5));
+        nearestChild = getChild(root.getLeft(), new Point2D(10, 5), true);
         if (!nearestChild.equals(root.getLeft().getRight()))
             throw new IllegalArgumentException("testNearestChild failed");
 
-        nearestChild = nearestChild(root.getLeft(), new Point2D(5, 4));
+        nearestChild = getChild(root.getLeft(), new Point2D(5, 4), true);
         if (!nearestChild.equals(root.getLeft().getRight()))
             throw new IllegalArgumentException("testNearestChild failed");
     }
 
     private void testIsNodeRecCloserToQuery() {
         Point2D query = new Point2D(1, 1);
-        if(!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
+        if (!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
             throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
 
         query = new Point2D(6, 5);
-        if(isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
+        if (isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
             throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
 
         query = new Point2D(2, 3);
-        if(!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
+        if (!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
             throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
+    }
+
+    private void testDrillDown() {
+        Node leftLeft = drillDown(new Point2D(2, 3), root, LEFT);
+        if (!leftLeft.equals(root.getLeft().getLeft()))
+            throw new IllegalArgumentException("testDrillDown failed");
+
+        Node leftRight = drillDown(new Point2D(4, 7), root, LEFT);
+        if (!leftRight.equals(root.getLeft().getRight()))
+            throw new IllegalArgumentException("testDrillDown failed");
+
+        Node right = drillDown(new Point2D(9, 6), root, !LEFT);
+        if (!right.equals(root.getRight()))
+            throw new IllegalArgumentException("testDrillDown failed");
     }
 
     /*
@@ -165,9 +181,7 @@ public class KdTree {
         int smaller = comparePointWithNode(point, currentNode);
         if (point.x() == currentNode.getVal().x() && point.y() == currentNode.getVal().y())
             return currentNode;
-        if (smaller < 0)
-            return goLeft(point, currentNode, currentNode.getLeft());
-        return goRight(point, currentNode, currentNode.getRight());
+        return drillDown(point, currentNode, (smaller < 0) == LEFT);
     }
 
     private int comparePointWithNode(Point2D point, Node node) {
@@ -175,22 +189,23 @@ public class KdTree {
                Double.compare(point.y(), node.getVal().y());
     }
 
-    private Node goLeft(Point2D point, Node parent, Node node) {
-        if (node == null || node.getVal() == null) {
-            Node newNode = new Node(!parent.getAxis());
-            parent.setLeft(newNode);
-            return newNode;
+    private Node drillDown(Point2D point, Node parent, boolean direction) {
+        if (direction == LEFT) {
+            if (parent.getLeft() == null || parent.getLeft().getVal() == null) {
+                Node newNode = new Node(!parent.getAxis());
+                parent.setLeft(newNode);
+                return newNode;
+            }
+            return traverse(point, parent.getLeft());
         }
-        return traverse(point, node);
-    }
-
-    private Node goRight(Point2D point, Node parent, Node node) {
-        if (node == null || node.getVal() == null) {
-            Node newNode = new Node(!parent.getAxis());
-            parent.setRight(newNode);
-            return newNode;
+        else {
+            if (parent.getRight() == null || parent.getRight().getVal() == null) {
+                Node newNode = new Node(!parent.getAxis());
+                parent.setRight(newNode);
+                return newNode;
+            }
+            return traverse(point, parent.getRight());
         }
-        return traverse(point, node);
     }
 
     public void draw() {
@@ -250,7 +265,8 @@ public class KdTree {
     private Point2D nearestNeighbor(Point2D query, Node node, Point2D champion) {
         if (node == null) return champion;
 
-        Node nearestChild = nearestChild(node, query);
+        Node nearestChild = getChild(node, query, true);
+        Node otherChild = getChild(node, query, false);
         // if new champion, prune the other subtree
         if (node.getVal().distanceTo(query) < champion.distanceTo(query)) {
             return nearestNeighbor(query, nearestChild, node.getVal());
@@ -264,8 +280,7 @@ public class KdTree {
             else {
                 // if rectangle containing the node is closer to the query than the champion, search it
                 if (isNodeRecCloserToQuery(query, node, champion))
-                    return nearestNeighbor(query, nearestChild.equals(node.getLeft()) ? node.getLeft() :
-                                                                                        node.getRight(), champion);
+                    return nearestNeighbor(query, otherChild, champion);
             }
         }
         return champion;
@@ -277,10 +292,15 @@ public class KdTree {
                Math.abs(query.y() - node.getVal().y()) < Math.abs(query.y() - champion.y());
     }
 
-    private Node nearestChild(Node node, Point2D query) {
-        return node.getAxis() == X ?
-               query.x() < node.getVal().x() ? node.getLeft() : node.getRight() :
-               query.y() < node.getVal().y() ? node.getLeft() : node.getRight();
+    private Node getChild(Node node, Point2D query, boolean nearestChild) {
+        if (node.getAxis() == X) {
+            if (nearestChild)
+                return query.x() < node.getVal().x() ? node.getLeft() : node.getRight();
+            return query.x() < node.getVal().x() ? node.getRight() : node.getLeft();
+        }
+        if (nearestChild)
+            return query.y() < node.getVal().y() ? node.getLeft() : node.getRight();
+        return query.y() < node.getVal().y() ? node.getRight() : node.getLeft();
     }
 
 
