@@ -16,6 +16,109 @@ public class KdTree {
 
     /*
      *********************************************************************
+     ********************** TESTING METHODS ******************************
+     *********************************************************************
+     */
+    public static void main(String[] args) {
+        KdTree kdTree = new KdTree();
+        kdTree.createKdTree();
+        kdTree.testSize();
+        kdTree.testContains();
+        kdTree.testRange();
+        kdTree.testNearestNeighbor();
+        kdTree.testNearestChild();
+        kdTree.testIsNodeRecCloserToQuery();
+        System.out.println("All tests passed.");
+    }
+
+    private void createKdTree() {
+        insert(new Point2D(7, 2));
+        insert(new Point2D(5, 4));
+        insert(new Point2D(2, 3));
+        insert(new Point2D(4, 7));
+        insert(new Point2D(9, 6));
+        insert(new Point2D(9, 6));
+    }
+
+    private void testSize() {
+        if (size() != 5)
+            throw new IllegalArgumentException("testSize failed");
+    }
+
+    private void testNearestNeighbor() {
+        // left
+        Point2D query = new Point2D(6, 5);
+        if (!nearestNeighbor(query).equals(root.getLeft().getVal()))
+            throw new IllegalArgumentException("testNearestNeighbor failed");
+
+        // left > left
+        query = new Point2D(1, 1);
+        if (!nearestNeighbor(query).equals(root.getLeft().getLeft().getVal()))
+            throw new IllegalArgumentException("testNearestNeighbor failed");
+
+        // right
+        query = new Point2D(8, 7);
+        if (!nearestNeighbor(query).equals(root.getRight().getVal()))
+            throw new IllegalArgumentException("testNearestNeighbor failed");
+
+        // root
+        query = new Point2D(8, 3);
+        if (!nearestNeighbor(query).equals(root.getVal()))
+            throw new IllegalArgumentException("testNearestNeighbor failed");
+
+        // left > right
+        query = new Point2D(4, 8);
+        if (!nearestNeighbor(query).equals(root.getLeft().getRight().getVal()))
+            throw new IllegalArgumentException("testNearestNeighbor failed");
+    }
+
+    private void testRange() {
+        Iterable<Point2D> range = range(new RectHV(3, 3, 6, 6));
+        range.forEach(point2D -> {
+            if (!point2D.equals(new Point2D(5, 4)))
+                throw new IllegalArgumentException("testRange failed");
+        });
+    }
+
+    private void testContains() {
+        if (!contains(new Point2D(4, 7)))
+            throw new IllegalArgumentException("testContains failed.");
+        if (contains(new Point2D(4, 2)))
+            throw new IllegalArgumentException("testContains failed.");
+        if (contains(null))
+            throw new IllegalArgumentException("testContains failed.");
+    }
+
+    private void testNearestChild() {
+        Node nearestChild = nearestChild(root.getLeft(), new Point2D(2, 2));
+        if (!nearestChild.equals(root.getLeft().getLeft()))
+            throw new IllegalArgumentException("testNearestChild failed");
+
+        nearestChild = nearestChild(root.getLeft(), new Point2D(10, 5));
+        if (!nearestChild.equals(root.getLeft().getRight()))
+            throw new IllegalArgumentException("testNearestChild failed");
+
+        nearestChild = nearestChild(root.getLeft(), new Point2D(5, 4));
+        if (!nearestChild.equals(root.getLeft().getRight()))
+            throw new IllegalArgumentException("testNearestChild failed");
+    }
+
+    private void testIsNodeRecCloserToQuery() {
+        Point2D query = new Point2D(1, 1);
+        if(!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
+            throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
+
+        query = new Point2D(6, 5);
+        if(isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
+            throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
+
+        query = new Point2D(2, 3);
+        if(!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
+            throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
+    }
+
+    /*
+     *********************************************************************
      ********************** KDTREE IMPLEMENTATION ************************
      *********************************************************************
      */
@@ -160,16 +263,15 @@ public class KdTree {
             }
             else {
                 // if rectangle containing the node is closer to the query than the champion, search it
-                if (isRecCloserToQuery(query, node, champion))
-                    return nearestNeighbor(query,
-                                           nearestChild.equals(node.getLeft()) ? node.getLeft() :
-                                           node.getRight(), champion);
+                if (isNodeRecCloserToQuery(query, node, champion))
+                    return nearestNeighbor(query, nearestChild.equals(node.getLeft()) ? node.getLeft() :
+                                                                                        node.getRight(), champion);
             }
         }
         return champion;
     }
 
-    private boolean isRecCloserToQuery(Point2D query, Node node, Point2D champion) {
+    private boolean isNodeRecCloserToQuery(Point2D query, Node node, Point2D champion) {
         return node.getAxis() == X ?
                Math.abs(query.x() - node.getVal().x()) < Math.abs(query.x() - champion.x()) :
                Math.abs(query.y() - node.getVal().y()) < Math.abs(query.y() - champion.y());
