@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c1e4f978-b3bd-4ae1-84e9-9e1170bce808" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KdTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/KdTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NearestNeighborVisualizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/NearestNeighborVisualizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PointSET.java" beforeDir="false" afterPath="$PROJECT_DIR$/PointSET.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/input1M.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input200K.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input400K.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/input800K.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,16 +55,39 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="ToolWindowMessages.ShowToolbar" value="false" />
     <property name="ToolWindowRun.ShowToolbar" value="false" />
-    <property name="settings.editor.selected.configurable" value="settings.saveactions" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.gutterIcons" />
   </component>
-  <component name="RunManager" selected="Application.PointSET">
+  <component name="RunManager" selected="Application.KdTree">
+    <configuration name="KdTree" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="KdTree" />
+      <module name="Algorithms, Part I" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="KdTreeVisualizer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="KdTreeVisualizer" />
       <module name="Algorithms, Part I" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NearestNeighborVisualizer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="NearestNeighborVisualizer" />
+      <module name="Algorithms, Part I" />
+      <option name="PROGRAM_PARAMETERS" value="circle10.txt" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -79,14 +109,18 @@
     </configuration>
     <list>
       <item itemvalue="Application.KdTreeVisualizer" />
+      <item itemvalue="Application.KdTree" />
+      <item itemvalue="Application.NearestNeighborVisualizer" />
       <item itemvalue="Application.PointSET" />
       <item itemvalue="Application.RangeSearchVisualizer" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.PointSET" />
+        <item itemvalue="Application.KdTree" />
         <item itemvalue="Application.RangeSearchVisualizer" />
         <item itemvalue="Application.KdTreeVisualizer" />
+        <item itemvalue="Application.NearestNeighborVisualizer" />
+        <item itemvalue="Application.PointSET" />
       </list>
     </recent_temporary>
   </component>
@@ -112,57 +146,100 @@
     </todo-panel>
   </component>
   <component name="WindowStateProjectService">
-    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587815604750">
+    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588942287077">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1587815604750" />
-    <state width="599" height="466" key="DebuggerActiveHint" timestamp="1587813690620">
+    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1588942287077" />
+    <state x="533" y="184" key="#com.intellij.ide.util.MemberChooser" timestamp="1588949287581">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="599" height="466" key="DebuggerActiveHint/0.23.1440.877@0.23.1440.877" timestamp="1587813690620" />
-    <state width="1398" height="231" key="GridCell.Tab.0.bottom" timestamp="1587820124070">
+    <state x="533" y="184" key="#com.intellij.ide.util.MemberChooser/0.23.1440.877@0.23.1440.877" timestamp="1588949287581" />
+    <state x="408" y="204" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1588793181438">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="231" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1587820124070" />
-    <state width="1398" height="231" key="GridCell.Tab.0.center" timestamp="1587820124068">
+    <state x="408" y="204" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1440.877@0.23.1440.877" timestamp="1588793181438" />
+    <state x="346" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1588943103534">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="231" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1587820124068" />
-    <state width="1398" height="231" key="GridCell.Tab.0.left" timestamp="1587820124067">
+    <state x="346" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1440.877@0.23.1440.877" timestamp="1588943103534" />
+    <state width="599" height="466" key="DebuggerActiveHint" timestamp="1588949085707">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="231" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1587820124067" />
-    <state width="1398" height="231" key="GridCell.Tab.0.right" timestamp="1587820124069">
+    <state width="599" height="466" key="DebuggerActiveHint/0.23.1440.877@0.23.1440.877" timestamp="1588949085707" />
+    <state x="100" y="123" width="1240" height="677" key="DiffContextDialog" timestamp="1587829487941">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="231" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1587820124069" />
-    <state width="1398" height="286" key="GridCell.Tab.1.bottom" timestamp="1587814445923">
+    <state x="100" y="123" width="1240" height="677" key="DiffContextDialog/0.23.1440.877@0.23.1440.877" timestamp="1587829487941" />
+    <state width="1398" height="231" key="GridCell.Tab.0.bottom" timestamp="1588949339785">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="286" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1587814445923" />
-    <state width="1398" height="286" key="GridCell.Tab.1.center" timestamp="1587814445922">
+    <state width="1398" height="231" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1588949339785" />
+    <state width="1398" height="231" key="GridCell.Tab.0.center" timestamp="1588949339784">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="286" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1587814445922" />
-    <state width="1398" height="286" key="GridCell.Tab.1.left" timestamp="1587814445922">
+    <state width="1398" height="231" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1588949339784" />
+    <state width="1398" height="231" key="GridCell.Tab.0.left" timestamp="1588949339784">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="286" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1587814445922" />
-    <state width="1398" height="286" key="GridCell.Tab.1.right" timestamp="1587814445922">
+    <state width="1398" height="231" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1588949339784" />
+    <state width="1398" height="231" key="GridCell.Tab.0.right" timestamp="1588949339785">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="1398" height="286" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1587814445922" />
-    <state width="500" height="445" key="SwitcherDM" timestamp="1587815718264">
+    <state width="1398" height="231" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1588949339785" />
+    <state width="1398" height="286" key="GridCell.Tab.1.bottom" timestamp="1588949126285">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="500" height="445" key="SwitcherDM/0.23.1440.877@0.23.1440.877" timestamp="1587815718264" />
-    <state width="526" height="234" key="javadoc.popup.new" timestamp="1587820252421">
+    <state width="1398" height="286" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1588949126285" />
+    <state width="1398" height="286" key="GridCell.Tab.1.center" timestamp="1588949126283">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state width="526" height="234" key="javadoc.popup.new/0.23.1440.877@0.23.1440.877" timestamp="1587820252421" />
-    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1587816550335">
+    <state width="1398" height="286" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1588949126283" />
+    <state width="1398" height="286" key="GridCell.Tab.1.left" timestamp="1588949126282">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1587816550335" />
+    <state width="1398" height="286" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1588949126282" />
+    <state width="1398" height="286" key="GridCell.Tab.1.right" timestamp="1588949126283">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="286" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1588949126283" />
+    <state x="534" y="386" key="ReplaceDuplicatesPrompt" timestamp="1587827644245">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="534" y="386" key="ReplaceDuplicatesPrompt/0.23.1440.877@0.23.1440.877" timestamp="1587827644245" />
+    <state x="208" y="43" key="SettingsEditor" timestamp="1588943519557">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="208" y="43" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1588943519557" />
+    <state width="500" height="445" key="SwitcherDM" timestamp="1588949324675">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="500" height="445" key="SwitcherDM/0.23.1440.877@0.23.1440.877" timestamp="1588949324675" />
+    <state x="443" y="361" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1588943496282">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="443" y="361" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.23.1440.877@0.23.1440.877" timestamp="1588943496282" />
+    <state x="499" y="272" key="extract.method.dialog" timestamp="1588947266685">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="499" y="272" key="extract.method.dialog/0.23.1440.877@0.23.1440.877" timestamp="1588947266685" />
+    <state width="373" height="109" key="javadoc.popup.new" timestamp="1588949123539">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="373" height="109" key="javadoc.popup.new/0.23.1440.877@0.23.1440.877" timestamp="1588949123539" />
+    <state x="429" y="244" key="refactoring.ChangeSignatureDialog" timestamp="1588426470687">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="429" y="244" key="refactoring.ChangeSignatureDialog/0.23.1440.877@0.23.1440.877" timestamp="1588426470687" />
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1588946953582">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1588946953582" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="size" language="JAVA" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

@@ -13,7 +13,7 @@ public class PointSET {
     private TreeSet<Point2D> treeSet;
 
     public PointSET() {
-        treeSet = new TreeSet<>(Point2D::compareTo);
+        treeSet = new TreeSet<>();
     }
 
     public static void main(String[] args) {
