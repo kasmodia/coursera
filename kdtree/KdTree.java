@@ -30,6 +30,7 @@ public class KdTree {
         kdTree.testNearestNeighbor();
         kdTree.testNearestChild();
         kdTree.testIsNodeRecCloserToQuery();
+        kdTree.testGetChild();
         System.out.println("All tests passed.");
     }
 
@@ -131,6 +132,20 @@ public class KdTree {
         Node right = drillDown(new Point2D(9, 6), root, !LEFT);
         if (!right.equals(root.getRight()))
             throw new IllegalArgumentException("testDrillDown failed");
+    }
+
+    private void testGetChild() {
+        Node nearestChild = getChild(root, new Point2D(5, 5), true);
+        if (!nearestChild.equals(root.getLeft()))
+            throw new IllegalArgumentException("testGetChild failed");
+
+        nearestChild = getChild(root, new Point2D(10, 10), true);
+        if (!nearestChild.equals(root.getRight()))
+            throw new IllegalArgumentException("testGetChild failed");
+
+        nearestChild = getChild(root, new Point2D(10, 10), false);
+        if (!nearestChild.equals(root.getLeft()))
+            throw new IllegalArgumentException("testGetChild failed");
     }
 
     /*
@@ -262,34 +277,26 @@ public class KdTree {
         return nearestNeighbor(query, root, new Point2D(Integer.MAX_VALUE, Integer.MAX_VALUE));
     }
 
-    private Point2D nearestNeighbor(Point2D query, Node node, Point2D champion) {
-        if (node == null) return champion;
+    private Point2D nearestNeighbor(Point2D query, Node node, Point2D finalChamp) {
+        if (node == null) return finalChamp;
 
         Node nearestChild = getChild(node, query, true);
         Node otherChild = getChild(node, query, false);
-        // if new champion, prune the other subtree
-        if (node.getVal().distanceTo(query) < champion.distanceTo(query)) {
-            return nearestNeighbor(query, nearestChild, node.getVal());
+
+        if (Double.compare(node.getVal().distanceTo(query), finalChamp.distanceTo(query)) < 0)
+            finalChamp = node.getVal();
+
+        finalChamp = nearestNeighbor(query, nearestChild, finalChamp);
+        if (isNodeRecCloserToQuery(query, node, finalChamp)) {
+            finalChamp = nearestNeighbor(query, otherChild, finalChamp);
         }
-        else {
-            // if not champion, then we might have to search both subtrees
-            Point2D nearestResult = nearestNeighbor(query, nearestChild, node.getVal());
-            if (nearestResult.distanceTo(query) < champion.distanceTo(query)) {
-                return nearestNeighbor(query, nearestChild, nearestResult);
-            }
-            else {
-                // if rectangle containing the node is closer to the query than the champion, search it
-                if (isNodeRecCloserToQuery(query, node, champion))
-                    return nearestNeighbor(query, otherChild, champion);
-            }
-        }
-        return champion;
+        return finalChamp;
     }
 
     private boolean isNodeRecCloserToQuery(Point2D query, Node node, Point2D champion) {
         return node.getAxis() == X ?
-               Math.abs(query.x() - node.getVal().x()) < Math.abs(query.x() - champion.x()) :
-               Math.abs(query.y() - node.getVal().y()) < Math.abs(query.y() - champion.y());
+               Math.abs(query.x() - node.getVal().y()) <= Math.abs(query.x() - champion.y()) :
+               Math.abs(query.y() - node.getVal().x()) <= Math.abs(query.y() - champion.x());
     }
 
     private Node getChild(Node node, Point2D query, boolean nearestChild) {
