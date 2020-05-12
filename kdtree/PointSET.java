@@ -81,7 +81,7 @@ public class PointSET {
                               && point2D.y() >= rect.ymin()
                               && point2D.x() <= rect.xmax()
                               && point2D.y() <= rect.ymax())
-                      .collect(Collectors.toSet());
+                      .collect(Collectors.toList());
     }
 
     public Point2D nearest(Point2D p) {

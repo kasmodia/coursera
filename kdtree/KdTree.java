@@ -35,12 +35,12 @@ public class KdTree {
     }
 
     private void createKdTree() {
-        insert(new Point2D(7, 2));
-        insert(new Point2D(5, 4));
-        insert(new Point2D(2, 3));
-        insert(new Point2D(4, 7));
-        insert(new Point2D(9, 6));
-        insert(new Point2D(9, 6));
+        insert(new Point2D(0.7, 0.2));
+        insert(new Point2D(0.5, 0.4));
+        insert(new Point2D(0.2, 0.3));
+        insert(new Point2D(0.4, 0.7));
+        insert(new Point2D(0.9, 0.6));
+        insert(new Point2D(0.9, 0.6));
     }
 
     private void testSize() {
@@ -50,101 +50,101 @@ public class KdTree {
 
     private void testNearestNeighbor() {
         // left
-        Point2D query = new Point2D(6, 5);
-        if (!nearestNeighbor(query).equals(root.getLeft().getVal()))
+        Point2D query = new Point2D(0.6, 0.5);
+        if (!nearest(query).equals(root.getLeft().getVal()))
             throw new IllegalArgumentException("testNearestNeighbor failed");
 
         // left > left
-        query = new Point2D(1, 1);
-        if (!nearestNeighbor(query).equals(root.getLeft().getLeft().getVal()))
-            throw new IllegalArgumentException("testNearestNeighbor failed");
-
-        // right
-        query = new Point2D(8, 7);
-        if (!nearestNeighbor(query).equals(root.getRight().getVal()))
+        query = new Point2D(0.1, 0.1);
+        if (!nearest(query).equals(root.getLeft().getLeft().getVal()))
             throw new IllegalArgumentException("testNearestNeighbor failed");
 
         // root
-        query = new Point2D(8, 3);
-        if (!nearestNeighbor(query).equals(root.getVal()))
+        query = new Point2D(0.8, 0.3);
+        if (!nearest(query).equals(root.getVal()))
             throw new IllegalArgumentException("testNearestNeighbor failed");
 
         // left > right
-        query = new Point2D(4, 8);
-        if (!nearestNeighbor(query).equals(root.getLeft().getRight().getVal()))
+        query = new Point2D(0.4, 0.8);
+        if (!nearest(query).equals(root.getLeft().getRight().getVal()))
+            throw new IllegalArgumentException("testNearestNeighbor failed");
+
+        // right
+        query = new Point2D(0.673, 0.706);
+        if (!nearest(query).equals(root.getRight().getVal()))
             throw new IllegalArgumentException("testNearestNeighbor failed");
     }
 
     private void testRange() {
-        Iterable<Point2D> range = range(new RectHV(3, 3, 6, 6));
+        Iterable<Point2D> range = range(new RectHV(0.3, 0.3, 0.6, 0.6));
         range.forEach(point2D -> {
-            if (!point2D.equals(new Point2D(5, 4)))
+            if (!point2D.equals(new Point2D(0.5, 0.4)))
                 throw new IllegalArgumentException("testRange failed");
         });
     }
 
     private void testContains() {
-        if (!contains(new Point2D(4, 7)))
+        if (!contains(new Point2D(0.4, 0.7)))
             throw new IllegalArgumentException("testContains failed.");
-        if (contains(new Point2D(4, 2)))
+        if (contains(new Point2D(0.4, 0.2)))
             throw new IllegalArgumentException("testContains failed.");
         if (contains(null))
             throw new IllegalArgumentException("testContains failed.");
     }
 
     private void testNearestChild() {
-        Node nearestChild = getChild(root.getLeft(), new Point2D(2, 2), true);
+        Node nearestChild = getChild(root.getLeft(), new Point2D(0.2, 0.2), true);
         if (!nearestChild.equals(root.getLeft().getLeft()))
             throw new IllegalArgumentException("testNearestChild failed");
 
-        nearestChild = getChild(root.getLeft(), new Point2D(10, 5), true);
+        nearestChild = getChild(root.getLeft(), new Point2D(0.10, 0.5), true);
         if (!nearestChild.equals(root.getLeft().getRight()))
             throw new IllegalArgumentException("testNearestChild failed");
 
-        nearestChild = getChild(root.getLeft(), new Point2D(5, 4), true);
+        nearestChild = getChild(root.getLeft(), new Point2D(0.5, 0.4), true);
         if (!nearestChild.equals(root.getLeft().getRight()))
             throw new IllegalArgumentException("testNearestChild failed");
     }
 
     private void testIsNodeRecCloserToQuery() {
-        Point2D query = new Point2D(1, 1);
+        Point2D query = new Point2D(0.1, 0.1);
         if (!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
             throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
 
-        query = new Point2D(6, 5);
+        query = new Point2D(0.6, 0.5);
         if (isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
             throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
 
-        query = new Point2D(2, 3);
+        query = new Point2D(0.2, 0.3);
         if (!isNodeRecCloserToQuery(query, root.getLeft().getLeft(), root.getLeft().getVal()))
             throw new IllegalArgumentException("testIsNodeRecCloserToQuery failed");
     }
 
     private void testDrillDown() {
-        Node leftLeft = drillDown(new Point2D(2, 3), root, LEFT);
+        Node leftLeft = drillDown(new Point2D(0.2, 0.3), root, LEFT);
         if (!leftLeft.equals(root.getLeft().getLeft()))
             throw new IllegalArgumentException("testDrillDown failed");
 
-        Node leftRight = drillDown(new Point2D(4, 7), root, LEFT);
+        Node leftRight = drillDown(new Point2D(0.4, 0.7), root, LEFT);
         if (!leftRight.equals(root.getLeft().getRight()))
             throw new IllegalArgumentException("testDrillDown failed");
 
-        Node right = drillDown(new Point2D(9, 6), root, !LEFT);
+        Node right = drillDown(new Point2D(0.9, 0.6), root, !LEFT);
         if (!right.equals(root.getRight()))
             throw new IllegalArgumentException("testDrillDown failed");
     }
 
     private void testGetChild() {
-        Node nearestChild = getChild(root, new Point2D(5, 5), true);
+        Node nearestChild = getChild(root, new Point2D(0.5, 0.5), true);
         if (!nearestChild.equals(root.getLeft()))
             throw new IllegalArgumentException("testGetChild failed");
 
-        nearestChild = getChild(root, new Point2D(10, 10), true);
+        nearestChild = getChild(root, new Point2D(0.9, 0.9), true);
         if (!nearestChild.equals(root.getRight()))
             throw new IllegalArgumentException("testGetChild failed");
 
-        nearestChild = getChild(root, new Point2D(10, 10), false);
-        if (!nearestChild.equals(root.getLeft()))
+        nearestChild = getChild(root, new Point2D(0.673, 0.706), false);
+        if (!nearestChild.equals(root.getRight()))
             throw new IllegalArgumentException("testGetChild failed");
     }
 
@@ -273,30 +273,35 @@ public class KdTree {
         }
     }
 
-    public Point2D nearestNeighbor(Point2D query) {
-        return nearestNeighbor(query, root, new Point2D(Integer.MAX_VALUE, Integer.MAX_VALUE));
+    public Point2D nearest(Point2D query) {
+        if (query == null || root == null)
+            return null;
+        return nearest(query, root, new Point2D(Integer.MAX_VALUE, Integer.MAX_VALUE));
     }
 
-    private Point2D nearestNeighbor(Point2D query, Node node, Point2D finalChamp) {
-        if (node == null) return finalChamp;
+    private Point2D nearest(Point2D query, Node node, Point2D finalChamp) {
+        if (node == null || node.getVal() == null) return finalChamp;
 
         Node nearestChild = getChild(node, query, true);
         Node otherChild = getChild(node, query, false);
 
-        if (Double.compare(node.getVal().distanceTo(query), finalChamp.distanceTo(query)) < 0)
+        if (Double.compare(node.getVal().distanceSquaredTo(query),
+                           finalChamp.distanceSquaredTo(query)) < 0)
             finalChamp = node.getVal();
 
-        finalChamp = nearestNeighbor(query, nearestChild, finalChamp);
+        finalChamp = nearest(query, nearestChild, finalChamp);
         if (isNodeRecCloserToQuery(query, node, finalChamp)) {
-            finalChamp = nearestNeighbor(query, otherChild, finalChamp);
+            finalChamp = nearest(query, otherChild, finalChamp);
         }
         return finalChamp;
     }
 
     private boolean isNodeRecCloserToQuery(Point2D query, Node node, Point2D champion) {
         return node.getAxis() == X ?
-               Math.abs(query.x() - node.getVal().y()) <= Math.abs(query.x() - champion.y()) :
-               Math.abs(query.y() - node.getVal().x()) <= Math.abs(query.y() - champion.x());
+               Double.compare(query.distanceSquaredTo(new Point2D(node.getVal().x(), query.y())),
+                              champion.distanceSquaredTo(query)) <= 0 :
+               Double.compare(query.distanceSquaredTo(new Point2D(query.x(), node.getVal().y())),
+                              champion.distanceSquaredTo(query)) <= 0;
     }
 
     private Node getChild(Node node, Point2D query, boolean nearestChild) {
