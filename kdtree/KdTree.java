@@ -183,6 +183,7 @@ public class KdTree {
     }
 
     public Iterable<Point2D> range(RectHV rect) {
+        if (rect == null) throw new IllegalArgumentException("Null rect passed to range()");
         List<Point2D> result = new ArrayList<>();
         searchNearest(rect, root, result);
         return result;
@@ -275,7 +276,7 @@ public class KdTree {
 
     public Point2D nearest(Point2D query) {
         if (query == null || root == null)
-            return null;
+            throw new IllegalArgumentException("passed query is null");
         return nearest(query, root, new Point2D(Integer.MAX_VALUE, Integer.MAX_VALUE));
     }
 
