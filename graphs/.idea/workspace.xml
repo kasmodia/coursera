@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="69aa2bf0-695b-4134-9275-0bd421269bfa" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../wordnet/SAP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../wordnet/WordNet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../kdtree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../kdtree/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1bwoplXZznF2K9SjDxrZCtO9IgI" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="LombokPluginEnabledInProject" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="JAVA" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RunManager" selected="Application.HamiltonianPathDAG">
+    <configuration name="BFS" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="BFS" />
+      <module name="graphs" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="HamiltonianPathDAG" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="HamiltonianPathDAG" />
+      <module name="graphs" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ShortestCycleDiGraph" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ShortestCycleDiGraph" />
+      <module name="graphs" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TopologicalSort" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="TopologicalSort" />
+      <module name="graphs" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Scratch" type="Java Scratch" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Scratch" />
+      <option name="SCRATCH_FILE_URL" value="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_7.java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.BFS" />
+      <item itemvalue="Application.HamiltonianPathDAG" />
+      <item itemvalue="Application.ShortestCycleDiGraph" />
+      <item itemvalue="Application.TopologicalSort" />
+      <item itemvalue="Java Scratch.Scratch" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.HamiltonianPathDAG" />
+        <item itemvalue="Java Scratch.Scratch" />
+        <item itemvalue="Application.BFS" />
+        <item itemvalue="Application.TopologicalSort" />
+        <item itemvalue="Application.ShortestCycleDiGraph" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="69aa2bf0-695b-4134-9275-0bd421269bfa" name="Default Changelist" comment="" />
+      <created>1589552701776</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589552701776</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/../../.." />
+    </ignored-roots>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="226" y="34" key="#Project_Structure" timestamp="1590602874299">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="226" y="34" key="#Project_Structure/0.23.1440.877@0.23.1440.877" timestamp="1590602874299" />
+    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1590603001774">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="184" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1590603001774" />
+    <state x="533" y="184" key="#com.intellij.ide.util.MemberChooser" timestamp="1590672044806">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="533" y="184" key="#com.intellij.ide.util.MemberChooser/0.23.1440.877@0.23.1440.877" timestamp="1590672044806" />
+    <state width="477" height="466" key="DebuggerActiveHint" timestamp="1590754690881">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="477" height="466" key="DebuggerActiveHint/0.23.1440.877@0.23.1440.877" timestamp="1590754690881" />
+    <state width="1398" height="265" key="GridCell.Tab.0.bottom" timestamp="1590854530663">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="265" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1590854530663" />
+    <state width="1398" height="265" key="GridCell.Tab.0.center" timestamp="1590854530661">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="265" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1590854530661" />
+    <state width="1398" height="265" key="GridCell.Tab.0.left" timestamp="1590854530660">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="265" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1590854530660" />
+    <state width="1398" height="265" key="GridCell.Tab.0.right" timestamp="1590854530662">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="265" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1590854530662" />
+    <state width="1398" height="286" key="GridCell.Tab.1.bottom" timestamp="1590754694246">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="286" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1590754694246" />
+    <state width="1398" height="286" key="GridCell.Tab.1.center" timestamp="1590754694245">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="286" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1590754694245" />
+    <state width="1398" height="286" key="GridCell.Tab.1.left" timestamp="1590754694244">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="286" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1590754694244" />
+    <state width="1398" height="286" key="GridCell.Tab.1.right" timestamp="1590754694245">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="1398" height="286" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1590754694245" />
+    <state x="208" y="43" key="SettingsEditor" timestamp="1590755322672">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="208" y="43" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1590755322672" />
+    <state width="500" height="445" key="SwitcherDM" timestamp="1590835384466">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state width="500" height="445" key="SwitcherDM/0.23.1440.877@0.23.1440.877" timestamp="1590835384466" />
+    <state x="295" y="132" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1590751538454">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="295" y="132" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.1440.877@0.23.1440.877" timestamp="1590751538454" />
+    <state x="458" y="206" key="extract.method.dialog" timestamp="1590490580309">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="458" y="206" key="extract.method.dialog/0.23.1440.877@0.23.1440.877" timestamp="1590490580309" />
+    <state x="143" y="84" key="new project wizard" timestamp="1590351294774">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="143" y="84" key="new project wizard/0.23.1440.877@0.23.1440.877" timestamp="1590351294774" />
+    <state x="429" y="244" key="refactoring.ChangeSignatureDialog" timestamp="1590436406043">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="429" y="244" key="refactoring.ChangeSignatureDialog/0.23.1440.877@0.23.1440.877" timestamp="1590436406043" />
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1590515684378">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1590515684378" />
+  </component>
+</project>
