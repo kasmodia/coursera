@@ -17,6 +17,7 @@ public class WordNet {
     private Map<String, List<Integer>> synsetsMap;
     private Digraph wordNetGraph;
     private int root = -1;
+    private SAP sap;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
@@ -38,6 +39,7 @@ public class WordNet {
             wordNetGraph.addEdge(Integer.parseInt(pair[0]), Integer.parseInt(pair[1]));
         }
         validateGraph();
+        sap = new SAP(wordNetGraph);
     }
 
     private void validateGraph() {
@@ -102,12 +104,18 @@ public class WordNet {
 
     // distance between nounA and nounB (defined below)
     public int distance(String nounA, String nounB) {
-        return 0;
+        if (!isNoun(nounA) || !isNoun(nounB))
+            throw new IllegalArgumentException("Nouns must exist in WordNet");
+        return sap.length(synsetsMap.get(nounA), synsetsMap.get(nounB));
     }
 
     // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
     public String sap(String nounA, String nounB) {
+        if (!isNoun(nounA) || !isNoun(nounB))
+            throw new IllegalArgumentException("Nouns must exist in WordNet");
+        // int ancestor = this.sap.ancestor(synsetsMap.get(nounA), synsetsMap.get(nounB));
+        // wordNetGraph.shortestPath();
         return null;
     }
 
