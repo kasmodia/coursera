@@ -24,7 +24,7 @@ public class WordNet {
     public WordNet(String synsets, String hypernyms) {
         if (synsets == null || hypernyms == null)
             throw new IllegalArgumentException("Null file names");
-        synsetsMap = new HashMap<>();
+        this.synsetsMap = new HashMap<>();
         this.synsets = new ArrayList<>();
 
         initSynsetMap(synsets);
