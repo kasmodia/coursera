@@ -126,7 +126,7 @@ public class SAP {
         int shortest = Integer.MAX_VALUE;
         for (Integer v : vs) {
             for (Integer w : ws) {
-                if (v == null || w == null || v < 0 || w < 0)
+                if (v == null || w == null || v < 0 || w < 0 || v > digraph.V() || w > digraph.V())
                     throw new IllegalArgumentException("Invalid Vertex in Digraph");
                 int length = length(v, w);
                 if (length < shortest) {
@@ -144,7 +144,7 @@ public class SAP {
         Integer[] shortest = new Integer[] { Integer.MAX_VALUE, Integer.MAX_VALUE };
         for (Integer v : vs) {
             for (Integer w : ws) {
-                if (v == null || w == null || v < 0 || w < 0)
+                if (v == null || w == null || v < 0 || w < 0 || v > digraph.V() || w > digraph.V())
                     throw new IllegalArgumentException("Invalid Vertex in Digraph");
                 if (v.equals(w)) return v;
                 Integer[] lengthAndAncestor = lengthsAndAncestor(v, w);
