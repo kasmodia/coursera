@@ -57,17 +57,11 @@ public class SAP {
         while (!vQ.isEmpty() || !wQ.isEmpty()) {
             if (!vQ.isEmpty()) {
                 Integer current = vQ.dequeue();
-                Integer[] stepResult = step(current, vMarked, wMarked, vDistTo, wDistTo, vQ);
-                if (stepResult[0] != -1) {
-                    lengthsAndAncestors.add(stepResult);
-                }
+                step(current, vMarked, wMarked, vDistTo, wDistTo, vQ, lengthsAndAncestors);
             }
             if (!wQ.isEmpty()) {
                 Integer current = wQ.dequeue();
-                Integer[] stepResult = step(current, wMarked, vMarked, wDistTo, vDistTo, wQ);
-                if (stepResult[0] != -1) {
-                    lengthsAndAncestors.add(stepResult);
-                }
+                step(current, wMarked, vMarked, wDistTo, vDistTo, wQ, lengthsAndAncestors);
             }
         }
         if (lengthsAndAncestors.isEmpty()) return new Integer[] { -1, -1 };
@@ -80,11 +74,11 @@ public class SAP {
         }
     }
 
-    private Integer[] step(int current, boolean[] thisMarked, boolean[] otherMarked,
-                           int[] thisDistTo, int[] thatDistTo, Queue<Integer> q) {
+    private void step(int current, boolean[] thisMarked, boolean[] otherMarked,
+                           int[] thisDistTo, int[] thatDistTo, Queue<Integer> q, List<Integer[]> lengthsAndAncestors) {
         // touched the other point's path?
         if (otherMarked[current]) {
-            return new Integer[] { thisDistTo[current] + thatDistTo[current], current };
+            lengthsAndAncestors.add(new Integer[] { thisDistTo[current] + thatDistTo[current], current });
         }
 
         // enqueue adjacent vertices
@@ -94,12 +88,7 @@ public class SAP {
                 thisDistTo[adj] = thisDistTo[current] + 1;
                 q.enqueue(adj);
             }
-            // touched the other point's path?
-            if (otherMarked[adj]) {
-                return new Integer[] { thisDistTo[adj] + thatDistTo[adj], adj };
-            }
         }
-        return new Integer[] {-1, -1};
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
