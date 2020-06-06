@@ -16,15 +16,11 @@ import java.util.List;
 public class SAP {
 
     private Digraph digraph;
-    private int[] edgeToV;
-    private int[] edgeToW;
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
         if (G == null) throw new IllegalArgumentException("Null Digraph");
         this.digraph = new Digraph(G);
-        this.edgeToV = new int[digraph.V()];
-        this.edgeToW = new int[digraph.V()];
     }
 
     // length of shortest ancestral path between v and w; -1 if no such path
@@ -32,6 +28,7 @@ public class SAP {
         if (v >= digraph.V() || w >= digraph.V() || v < 0 || w < 0)
             throw new IllegalArgumentException("Vertices out of bounds.");
 
+        if (v == w) return 0;
         return lengthsAndAncestor(v, w)[0];
     }
 
@@ -39,90 +36,98 @@ public class SAP {
         if (v >= digraph.V() || w >= digraph.V() || v < 0 || w < 0)
             throw new IllegalArgumentException("Vertices out of bounds.");
 
+        if (v == w) return v;
         return lengthsAndAncestor(v, w)[1];
     }
 
     private Integer[] lengthsAndAncestor(int v, int w) {
-        boolean[] vVisited = new boolean[digraph.V()];
-        boolean[] wVisited = new boolean[digraph.V()];
+        List<Integer[]> lengthsAndAncestors = new ArrayList<>();
         Queue<Integer> vQ = new Queue<>();
-        vQ.enqueue(v);
         Queue<Integer> wQ = new Queue<>();
+        int[] vDistTo = new int[digraph.V()];
+        int[] wDistTo = new int[digraph.V()];
+        boolean[] vMarked = new boolean[digraph.V()];
+        boolean[] wMarked = new boolean[digraph.V()];
+        vMarked[v] = true;
+        wMarked[w] = true;
+        vQ.enqueue(v);
         wQ.enqueue(w);
 
         // BFS in lockstep
-        List<Integer[]> lengthsAndAncestors = new ArrayList<>();
         while (!vQ.isEmpty() || !wQ.isEmpty()) {
-            if (!vQ.isEmpty())
-                step(v, w, vVisited, wVisited, vQ, edgeToV, lengthsAndAncestors);
-            if (!wQ.isEmpty())
-                step(v, w, wVisited, vVisited, wQ, edgeToW, lengthsAndAncestors);
+            if (!vQ.isEmpty()) {
+                Integer current = vQ.dequeue();
+                Integer[] stepResult = step(current, vMarked, wMarked, vDistTo, wDistTo, vQ);
+                if (stepResult[0] != -1) {
+                    lengthsAndAncestors.add(stepResult);
+                }
+            }
+            if (!wQ.isEmpty()) {
+                Integer current = wQ.dequeue();
+                Integer[] stepResult = step(current, wMarked, vMarked, wDistTo, vDistTo, wQ);
+                if (stepResult[0] != -1) {
+                    lengthsAndAncestors.add(stepResult);
+                }
+            }
         }
-
-        // calculate shortest ancestor
-        Integer[] shortest = new Integer[] {Integer.MAX_VALUE, Integer.MAX_VALUE};
-        for (Integer[] lengthAndAncestor: lengthsAndAncestors) {
-            if (lengthAndAncestor[0] < shortest[0]) shortest = lengthAndAncestor;
+        if (lengthsAndAncestors.isEmpty()) return new Integer[] { -1, -1 };
+        else {
+            Integer[] shortest = lengthsAndAncestors.get(0);
+            for (Integer[] lengthAndAncestor: lengthsAndAncestors) {
+                if (lengthAndAncestor[0] < shortest[0]) shortest = lengthAndAncestor;
+            }
+            return shortest;
         }
-
-        // if no ancestor return {-1, -1}
-        if (lengthsAndAncestors.size() == 0) return new Integer[] { -1, -1 };
-        return shortest;
     }
 
-    private void step(int v, int w, boolean[] thisVisited, boolean[] otherVisited,
-                         Queue<Integer> q, int[] edges,
-                         List<Integer[]> lengthsAndAncestors) {
-        Integer current = q.dequeue();
-        // touched the other point's path
-        if (otherVisited[current])
-            lengthsAndAncestors.add(calcLength(v, w, current));
-
-        thisVisited[current] = true;
+    private Integer[] step(int current, boolean[] thisMarked, boolean[] otherMarked,
+                           int[] thisDistTo, int[] thatDistTo, Queue<Integer> q) {
+        // touched the other point's path?
+        if (otherMarked[current]) {
+            return new Integer[] { thisDistTo[current] + thatDistTo[current], current };
+        }
 
         // enqueue adjacent vertices
         for (int adj : digraph.adj(current)) {
-            if (!thisVisited[adj]) {
-                edges[adj] = current;
+            if (!thisMarked[adj]) {
+                thisMarked[adj] = true;
+                thisDistTo[adj] = thisDistTo[current] + 1;
                 q.enqueue(adj);
             }
+            // touched the other point's path?
+            if (otherMarked[adj]) {
+                return new Integer[] { thisDistTo[adj] + thatDistTo[adj], adj };
+            }
         }
-    }
-
-    private Integer[] calcLength(int v, int w, int ancestor) {
-        int counter = 0;
-        for (int i = ancestor; i != v; i = edgeToV[i]) {
-            counter++;
-        }
-        for (int i = ancestor; i != w; i = edgeToW[i]) {
-            counter++;
-        }
-        return new Integer[] {counter, ancestor};
+        return new Integer[] {-1, -1};
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
     public int length(Iterable<Integer> vs, Iterable<Integer> ws) {
         if (vs == null || ws == null) throw new IllegalArgumentException("Null Digraph");
 
-        Integer[] shortest = new Integer[] {Integer.MAX_VALUE, Integer.MAX_VALUE};
+        int shortest = Integer.MAX_VALUE;
         for (Integer v : vs) {
             for (Integer w : ws) {
-                Integer[] lengthAndAncestor = lengthsAndAncestor(v, w);
-                if (lengthAndAncestor[0] < shortest[0]) {
-                    shortest = lengthAndAncestor;
+                if (v == null || w == null) throw new IllegalArgumentException("Null Vertex in Digraph");
+                int length = length(v, w);
+                if (length < shortest) {
+                    shortest = length;
                 }
             }
         }
-        return shortest[0] == Integer.MAX_VALUE ? -1 : shortest[0];
+        return shortest == Integer.MAX_VALUE ? -1 : shortest;
     }
 
     // a common ancestor that participates in shortest ancestral path; -1 if no such path
     public int ancestor(Iterable<Integer> vs, Iterable<Integer> ws) {
         if (vs == null || ws == null) throw new IllegalArgumentException("Null Digraph");
 
-        Integer[] shortest = new Integer[] {Integer.MAX_VALUE, Integer.MAX_VALUE};
+        Integer[] shortest = new Integer[] { Integer.MAX_VALUE, Integer.MAX_VALUE };
         for (Integer v : vs) {
             for (Integer w : ws) {
+                if (v == null || w == null) throw new IllegalArgumentException("Null Vertex in Digraph");
+                if (v.equals(w)) return v;
                 Integer[] lengthAndAncestor = lengthsAndAncestor(v, w);
                 if (lengthAndAncestor[0] < shortest[0]) {
                     shortest = lengthAndAncestor;
@@ -142,11 +147,11 @@ public class SAP {
             String[] w = StdIn.readLine().split(",");
 
             List<Integer> vlist = new ArrayList<>();
-            for (String s: v) {
+            for (String s : v) {
                 vlist.add(Integer.parseInt(s.trim()));
             }
             List<Integer> wlist = new ArrayList<>();
-            for (String s: w) {
+            for (String s : w) {
                 wlist.add(Integer.parseInt(s.trim()));
             }
             int length = sap.length(vlist, wlist);
