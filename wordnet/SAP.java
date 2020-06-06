@@ -16,11 +16,26 @@ import java.util.List;
 public class SAP {
 
     private Digraph digraph;
+    private List<Integer[]> lengthsAndAncestors;
+    private Queue<Integer> vQ;
+    private Queue<Integer> wQ;
+    private int[] vDistTo;
+    private int[] wDistTo;
+    private boolean[] vMarked;
+    private boolean[] wMarked;
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
         if (G == null) throw new IllegalArgumentException("Null Digraph");
         this.digraph = new Digraph(G);
+        lengthsAndAncestors = new ArrayList<>();
+        lengthsAndAncestors = new ArrayList<>();
+        vQ = new Queue<>();
+        wQ = new Queue<>();
+        vDistTo = new int[digraph.V()];
+        wDistTo = new int[digraph.V()];
+        vMarked = new boolean[digraph.V()];
+        wMarked = new boolean[digraph.V()];
     }
 
     // length of shortest ancestral path between v and w; -1 if no such path
@@ -41,15 +56,15 @@ public class SAP {
     }
 
     private Integer[] lengthsAndAncestor(int v, int w) {
-        List<Integer[]> lengthsAndAncestors = new ArrayList<>();
-        Queue<Integer> vQ = new Queue<>();
-        Queue<Integer> wQ = new Queue<>();
-        int[] vDistTo = new int[digraph.V()];
-        int[] wDistTo = new int[digraph.V()];
-        boolean[] vMarked = new boolean[digraph.V()];
-        boolean[] wMarked = new boolean[digraph.V()];
+        List<Integer> vMarkedList = new ArrayList<>();
+        List<Integer> wMarkedList = new ArrayList<>();
+        lengthsAndAncestors = new ArrayList<>();
+        vQ = new Queue<>();
+        wQ = new Queue<>();
         vMarked[v] = true;
         wMarked[w] = true;
+        vMarkedList.add(v);
+        wMarkedList.add(w);
         vQ.enqueue(v);
         wQ.enqueue(w);
 
@@ -57,17 +72,27 @@ public class SAP {
         while (!vQ.isEmpty() || !wQ.isEmpty()) {
             if (!vQ.isEmpty()) {
                 Integer current = vQ.dequeue();
-                step(current, vMarked, wMarked, vDistTo, wDistTo, vQ, lengthsAndAncestors);
+                step(current, vMarked, wMarked, vDistTo, wDistTo, vMarkedList, vQ);
             }
             if (!wQ.isEmpty()) {
                 Integer current = wQ.dequeue();
-                step(current, wMarked, vMarked, wDistTo, vDistTo, wQ, lengthsAndAncestors);
+                step(current, wMarked, vMarked, wDistTo, vDistTo, wMarkedList, wQ);
             }
         }
+        // clean arrays
+        for (Integer mark : vMarkedList) {
+            vMarked[mark] = false;
+            vDistTo[mark] = 0;
+        }
+        for (Integer mark : wMarkedList) {
+            wMarked[mark] = false;
+            wDistTo[mark] = 0;
+        }
+
         if (lengthsAndAncestors.isEmpty()) return new Integer[] { -1, -1 };
         else {
             Integer[] shortest = lengthsAndAncestors.get(0);
-            for (Integer[] lengthAndAncestor: lengthsAndAncestors) {
+            for (Integer[] lengthAndAncestor : lengthsAndAncestors) {
                 if (lengthAndAncestor[0] < shortest[0]) shortest = lengthAndAncestor;
             }
             return shortest;
@@ -75,10 +100,12 @@ public class SAP {
     }
 
     private void step(int current, boolean[] thisMarked, boolean[] otherMarked,
-                           int[] thisDistTo, int[] thatDistTo, Queue<Integer> q, List<Integer[]> lengthsAndAncestors) {
+                      int[] thisDistTo, int[] thatDistTo,
+                      List<Integer> markedList, Queue<Integer> q) {
         // touched the other point's path?
         if (otherMarked[current]) {
-            lengthsAndAncestors.add(new Integer[] { thisDistTo[current] + thatDistTo[current], current });
+            lengthsAndAncestors
+                    .add(new Integer[] { thisDistTo[current] + thatDistTo[current], current });
         }
 
         // enqueue adjacent vertices
@@ -86,6 +113,7 @@ public class SAP {
             if (!thisMarked[adj]) {
                 thisMarked[adj] = true;
                 thisDistTo[adj] = thisDistTo[current] + 1;
+                markedList.add(adj);
                 q.enqueue(adj);
             }
         }
@@ -98,7 +126,8 @@ public class SAP {
         int shortest = Integer.MAX_VALUE;
         for (Integer v : vs) {
             for (Integer w : ws) {
-                if (v == null || w == null) throw new IllegalArgumentException("Null Vertex in Digraph");
+                if (v == null || w == null || v < 0 || w < 0)
+                    throw new IllegalArgumentException("Invalid Vertex in Digraph");
                 int length = length(v, w);
                 if (length < shortest) {
                     shortest = length;
@@ -115,7 +144,8 @@ public class SAP {
         Integer[] shortest = new Integer[] { Integer.MAX_VALUE, Integer.MAX_VALUE };
         for (Integer v : vs) {
             for (Integer w : ws) {
-                if (v == null || w == null) throw new IllegalArgumentException("Null Vertex in Digraph");
+                if (v == null || w == null || v < 0 || w < 0)
+                    throw new IllegalArgumentException("Invalid Vertex in Digraph");
                 if (v.equals(w)) return v;
                 Integer[] lengthAndAncestor = lengthsAndAncestor(v, w);
                 if (lengthAndAncestor[0] < shortest[0]) {
